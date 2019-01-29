@@ -51,4 +51,17 @@
     seach_keyword, publication_date, details_txt, details_div, reference
     from academic_paper
   </select>
+
+
+
+  <select id="getData" parameterType="java.util.Map" resultType="java.util.Map">
+    select article_id, pdf_path
+    from academic_paper WHERE posting_name=#{type} ORDER BY update_time LIMIT #{page},#{rows}
+  </select>
+
+
+  <select id="getCountByName" parameterType="java.util.Map" resultType="java.lang.Integer">
+    select count(*) as count
+    from academic_paper WHERE posting_name=#{type}
+  </select>
 </mapper>
