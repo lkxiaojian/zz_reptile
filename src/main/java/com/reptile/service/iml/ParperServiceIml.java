@@ -20,7 +20,7 @@ public class ParperServiceIml implements ParperService {
     public Map<String, Object> getData(int rows, int page, String type) throws Exception {
         Map<String,Object> map=new HashMap<>();
         map.put("rows",rows);
-        map.put("page",page);
+        map.put("page",(page-1)*rows);
         map.put("type",type);
 
         List<Map<String, Object>> maps = academicPaperMapper.getData(map);
@@ -33,9 +33,13 @@ public class ParperServiceIml implements ParperService {
                 maps.get(i).put("txt",PDFtoContent.getContent("D:/File/"+pdf_path.toString()));
             }
         }
+        int num=count - rows*page;
+        if(num<0){
+            num=0;
+        }
         resultMap.put("code",0);
         resultMap.put("message","请求成功");
-        resultMap.put("count", count - rows - page);
+        resultMap.put("count", num);
         resultMap.put("result",maps);
         return resultMap;
     }
