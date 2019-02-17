@@ -3,7 +3,7 @@ package com.reptile.entity;
 import java.util.Date;
 
 public class ArticleType {
-    private Integer articleTypeId;
+    private String articleTypeId;
 
     private String articleTypeName;
 
@@ -17,11 +17,11 @@ public class ArticleType {
 
     private Integer parentid;
 
-    public Integer getArticleTypeId() {
+    public String getArticleTypeId() {
         return articleTypeId;
     }
 
-    public void setArticleTypeId(Integer articleTypeId) {
+    public void setArticleTypeId(String articleTypeId) {
         this.articleTypeId = articleTypeId;
     }
 

@@ -55,77 +55,77 @@ public class Gather {
 	@Autowired
 	private ReptileDao mapper;
 	
-	public void getData(int contentType,String query,Integer articleTypeId) {
-		
-		StringBuffer sb = new StringBuffer();
-		BufferedReader br= null;
-		InputStreamReader isr = null;
-		try {
-			String s = "http://weixin.sogou.com/weixin?type=2&s_from=input&query="+query.replace("&", "%26")+"&ie=utf8&_sug_=y&_sug_type_=";
-			Connection con=Jsoup.connect(s);//获取连接 
-
-	        con.header("Cookie", WEB_COOKIE);//配置模拟浏览器  
-			con.maxBodySize(0);
-	        Response rs= con.execute();//获取响应  
-	        Document document=Jsoup.parse(rs.body());//转换为Dom树 
-			
-			Element elements = document.getElementsByClass("news-list").last();
-			if(elements !=null ) {
-				Elements lis = elements.getElementsByTag("li");
-				if(lis != null) {
-					ReptileEntity reptileEntity=null;
-					for (Element e : lis) {
-						
-						reptileEntity = new ReptileEntity();
-						reptileEntity.setArticleTypeId(articleTypeId);
-//						System.out.println(e.toString());
-						Elements imgtxtBox = e.getElementsByTag("div");
-						String articleId = e.attr("d");
-						
-						String detailsPath = imgtxtBox.select("a").first().attr("href");
-						reptileEntity.setDetailsPath(detailsPath);
-//						
-						reptileEntity.setArticleId(articleId.substring(articleId.lastIndexOf("-")+1));
-						
-						
-						reptileEntity.setContentCrawl(imgtxtBox.toString().getBytes());
-
-						String articleTitle = imgtxtBox.select("h3").last().text();
-
-						reptileEntity.setArticleTitle(articleTitle);
-						reptileEntity.setArticleKeyword(query);
-						
-						String contentExcerpt = imgtxtBox.select("p").last().text();
-						reptileEntity.setContentExcerpt(contentExcerpt);
-
-						
-						Element txtBox2 = imgtxtBox.get(2);
-						String source = txtBox2.getElementsByTag("a").first().text();
-						reptileEntity.setSource(source);
-
-						Long createTime =  Long.valueOf(txtBox2.attr("t"));
-						
-						reptileEntity.setCreateTime( createTime);
-						
-						reptileEntity.setContentType(contentType);
-						mapper.insert(reptileEntity);
-					}
-				}
-				
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}finally{
-			try {
-				if(br!=null)br.close();
-				if(isr!=null)isr.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-	}
+//	public void getData(int contentType,String query,Integer articleTypeId) {
+//
+//		StringBuffer sb = new StringBuffer();
+//		BufferedReader br= null;
+//		InputStreamReader isr = null;
+//		try {
+//			String s = "http://weixin.sogou.com/weixin?type=2&s_from=input&query="+query.replace("&", "%26")+"&ie=utf8&_sug_=y&_sug_type_=";
+//			Connection con=Jsoup.connect(s);//获取连接
+//
+//	        con.header("Cookie", WEB_COOKIE);//配置模拟浏览器
+//			con.maxBodySize(0);
+//	        Response rs= con.execute();//获取响应
+//	        Document document=Jsoup.parse(rs.body());//转换为Dom树
+//
+//			Element elements = document.getElementsByClass("news-list").last();
+//			if(elements !=null ) {
+//				Elements lis = elements.getElementsByTag("li");
+//				if(lis != null) {
+//					ReptileEntity reptileEntity=null;
+//					for (Element e : lis) {
+//
+//						reptileEntity = new ReptileEntity();
+//						reptileEntity.setArticleTypeId(articleTypeId);
+////						System.out.println(e.toString());
+//						Elements imgtxtBox = e.getElementsByTag("div");
+//						String articleId = e.attr("d");
+//
+//						String detailsPath = imgtxtBox.select("a").first().attr("href");
+//						reptileEntity.setDetailsPath(detailsPath);
+////
+//						reptileEntity.setArticleId(articleId.substring(articleId.lastIndexOf("-")+1));
+//
+//
+//						reptileEntity.setContentCrawl(imgtxtBox.toString().getBytes());
+//
+//						String articleTitle = imgtxtBox.select("h3").last().text();
+//
+//						reptileEntity.setArticleTitle(articleTitle);
+//						reptileEntity.setArticleKeyword(query);
+//
+//						String contentExcerpt = imgtxtBox.select("p").last().text();
+//						reptileEntity.setContentExcerpt(contentExcerpt);
+//
+//
+//						Element txtBox2 = imgtxtBox.get(2);
+//						String source = txtBox2.getElementsByTag("a").first().text();
+//						reptileEntity.setSource(source);
+//
+//						Long createTime =  Long.valueOf(txtBox2.attr("t"));
+//
+//						reptileEntity.setCreateTime( createTime);
+//
+//						reptileEntity.setContentType(contentType);
+//						mapper.insert(reptileEntity);
+//					}
+//				}
+//
+//			}
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}finally{
+//			try {
+//				if(br!=null)br.close();
+//				if(isr!=null)isr.close();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//
+//	}
 	
 	
 	public int getNum(String num) {

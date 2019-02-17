@@ -22,7 +22,7 @@ public class ReptileEntity implements Serializable{
 	private String articleKeyword;
 	private int contentType;
     @NotNull(message = "用户ID不能为空")
-	private Integer articleTypeId;
+	private String articleTypeId;
 	private String contentExcerpt;
 	private int state;
 	private byte[] detailsTxt;
@@ -63,10 +63,10 @@ public class ReptileEntity implements Serializable{
 	public void setContentExcerpt(String contentExcerpt) {
 		this.contentExcerpt = contentExcerpt;
 	}
-	public Integer getArticleTypeId() {
+	public String getArticleTypeId() {
 		return articleTypeId;
 	}
-	public void setArticleTypeId(Integer articleTypeId) {
+	public void setArticleTypeId(String articleTypeId) {
 		this.articleTypeId = articleTypeId;
 	}
 	public Long getCreateTime() {

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.reptile.dao.ArticleTypeMapper">
   <resultMap id="BaseResultMap" type="com.reptile.entity.ArticleType">
-    <id column="article_type_id" jdbcType="INTEGER" property="articleTypeId" />
+    <id column="article_type_id" jdbcType="VARCHAR" property="articleTypeId" />
     <result column="article_type_name" jdbcType="VARCHAR" property="articleTypeName" />
     <result column="article_type_keyword" jdbcType="VARCHAR" property="articleTypeKeyword" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />

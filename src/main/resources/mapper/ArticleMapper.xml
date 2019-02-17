@@ -3,7 +3,7 @@
 <mapper namespace="com.reptile.dao.ArticleMapper">
   <resultMap id="BaseResultMap" type="com.reptile.entity.Article">
     <result column="article_id" jdbcType="VARCHAR" property="articleId" />
-    <result column="article_type_id" jdbcType="DOUBLE" property="articleTypeId" />
+    <result column="article_type_id" jdbcType="VARCHAR" property="articleTypeId" />
     <result column="article_title" jdbcType="VARCHAR" property="articleTitle" />
     <result column="article_keyword" jdbcType="VARCHAR" property="articleKeyword" />
     <result column="author" jdbcType="VARCHAR" property="author" />

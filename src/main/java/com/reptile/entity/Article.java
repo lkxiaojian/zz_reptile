@@ -5,7 +5,7 @@ import java.util.Date;
 public class Article {
     private String articleId;
 
-    private Integer articleTypeId;
+    private String articleTypeId;
 
     private String articleTitle;
 
@@ -99,11 +99,11 @@ public class Article {
     }
 
 
-    public Integer getArticleTypeId() {
+    public String getArticleTypeId() {
 		return articleTypeId;
 	}
 
-	public void setArticleTypeId(Integer articleTypeId) {
+	public void setArticleTypeId(String articleTypeId) {
 		this.articleTypeId = articleTypeId;
 	}
 
