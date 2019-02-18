@@ -27,10 +27,10 @@
             SELECT LAST_INSERT_ID()
         </selectKey>
         insert into chat.keyword (id,keyword_name, create_time,
-        last_time)
+        last_time,del_type)
         values
         <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.id},#{item.keywordName},#{item.createTime},#{item.lastTime})
+            (#{item.id},#{item.keywordName},#{item.createTime},#{item.lastTime},#{del_type})
         </foreach>
     </insert>
 
