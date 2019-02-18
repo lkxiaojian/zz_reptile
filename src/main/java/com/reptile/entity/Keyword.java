@@ -16,6 +16,16 @@ public class Keyword implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    private int del_type;
+
+    public int getDel_type() {
+        return del_type;
+    }
+
+    public void setDel_type(int del_type) {
+        this.del_type = del_type;
+    }
+
     public String getId() {
         return id;
     }

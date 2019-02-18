@@ -14,4 +14,6 @@ public interface KeywordMapper {
     int updateKeyword(Keyword keyword);
 
     int delKeyword(String id);
+
+    int updateDelKeyword(Keyword record);
 }

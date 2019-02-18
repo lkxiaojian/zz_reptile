@@ -27,12 +27,13 @@ public class ParperServiceIml implements ParperService {
         int count=  academicPaperMapper.getCountByName(map);
 
         Map<String,Object> resultMap=new HashMap<>();
-        for(int i=0;i<maps.size();i++){
-            Object pdf_path = maps.get(i).get("pdf_path");
-            if(pdf_path!=null){
-                maps.get(i).put("txt",PDFtoContent.getContent("D:/File/"+pdf_path.toString()));
-            }
-        }
+        //把pdf 转成字符串
+//        for(int i=0;i<maps.size();i++){
+//            Object pdf_path = maps.get(i).get("pdf_path");
+//            if(pdf_path!=null){
+//                maps.get(i).put("txt",PDFtoContent.getContent("D:/File/"+pdf_path.toString()));
+//            }
+//        }
         int num=count - rows*page;
         if(num<0){
             num=0;

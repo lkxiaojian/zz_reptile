@@ -46,4 +46,11 @@
     <delete id="delKeyword" parameterType="java.lang.String" >
         DELETE FROM chat.keyword where id=#{id}
     </delete>
+
+
+    <update id="updateDelKeyword" parameterType="com.reptile.entity.Keyword" >
+        update chat.keyword
+        set del_type = #{del_type}
+        where id = #{id}
+    </update>
 </mapper>
