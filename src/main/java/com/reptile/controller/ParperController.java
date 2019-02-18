@@ -34,14 +34,35 @@ public class ParperController {
 
 		Map map = new HashMap();
 		try {
-
 			map=parperServiceIml.getData(rows,page,type);
-			
 		} catch (Exception e) {
 			map.put("msg", "系统程序出错，请联系管理员！");
 			map.put("code",500);
 		}
     	
+		return map;
+	}
+
+	/**
+	 * 获取微信文章
+	 * @param rows
+	 * @param page
+	 * @param type
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/getWxData")
+	public Map getWxData(int rows, int page, String type) throws Exception{
+
+
+		Map map = new HashMap();
+		try {
+			map=parperServiceIml.getWxData(rows,page,type);
+		} catch (Exception e) {
+			map.put("msg", "系统程序出错，请联系管理员！");
+			map.put("code",500);
+		}
+
 		return map;
 	}
 }
