@@ -30,7 +30,7 @@
         last_time,del_type)
         values
         <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.id},#{item.keywordName},#{item.createTime},#{item.lastTime},#{del_type})
+            (#{item.id},#{item.keywordName},#{item.createTime},#{item.lastTime},#{item.del_type})
         </foreach>
     </insert>
 
