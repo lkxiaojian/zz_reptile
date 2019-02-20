@@ -55,8 +55,14 @@
 	keyword_name article_type_keyword ,
 	DATE_FORMAT(last_time,'%Y-%m-%d') iamge_icon,
 	DATE_FORMAT(DATE_ADD(last_time, INTERVAL #{day,jdbcType=INTEGER} DAY),'%Y-%m-%d') iamge_back
-	FROM keyword WHERE
-	DATE_ADD(last_time, INTERVAL #{day,jdbcType=INTEGER} DAY) &lt;= NOW()
+	FROM keyword WHERE del_type = 0
+	<!--
+	 and id%#{threadNum,jdbcType=INTEGER}=#{rem,jdbcType=INTEGER}
+	 -->
+     <if test="threadNum != 0 ">
+       and id%#{threadNum,jdbcType=INTEGER}=#{rem,jdbcType=INTEGER}
+     </if>
+	and DATE_ADD(last_time, INTERVAL #{day,jdbcType=INTEGER} DAY) &lt;= NOW()
 	ORDER BY last_time 
 	
   </select>

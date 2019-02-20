@@ -1,16 +1,10 @@
 package com.reptile.service;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import com.reptile.dao.ReptileDao;
+import com.reptile.entity.ArticleType;
+import com.reptile.entity.IpPostEntity;
+import com.reptile.entity.ReptileEntity;
 import org.jsoup.Connection;
-import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -22,10 +16,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
-import com.reptile.dao.ReptileDao;
-import com.reptile.entity.ArticleType;
-import com.reptile.entity.IpPostEntity;
-import com.reptile.entity.ReptileEntity;
+import java.util.List;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @PropertySource({"classpath:webUser.properties","classpath:application.yml"})
@@ -179,11 +173,23 @@ public class Gather {
 						maxInfo.indexOf("Host Not Found or connection failed")!=-1||
 						maxInfo.length()<300
 						) {
-					 Thread.sleep(ran.nextInt(18000));
-					continue;}
+//							if(j==3){
+//								break;
+//							}else{
+//								j++;
+//								Thread.sleep(ran.nextInt(18000));
+//								continue;
+//							}
+							continue;
+						}
 			}else {
-				 Thread.sleep(ran.nextInt(18000));
-				continue;
+				if(j==3){
+					break;
+				}else{
+					j++;
+					Thread.sleep(ran.nextInt(18000));
+					continue;
+				}
 			}
 			Element elements = document.getElementsByClass("news-list").last();
 			if(elements !=null ) {
@@ -223,7 +229,7 @@ public class Gather {
 						
 						mapper.insert(reptileEntity);
 					}
-
+					log.info("插入信息"+lis.size()+"条");
 				}
 				
 			}
@@ -243,7 +249,8 @@ public class Gather {
 				urlPath= WEB_URL +urlPath;
 				sogouNext = null;
 			}
-			log.info("访问地址："+urlPath+"——长度："+maxInfo.length());
+			Thread.sleep(ran.nextInt(8000));
+			log.info("访问地址："+urlPath+" ——长度："+maxInfo.length());
 
 		}
 		
@@ -259,9 +266,9 @@ public class Gather {
 		try {
 			Connection con= Jsoup.connect(url);//获取连接 
 		
-		con.header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
+		con.header("Accept", "text/html,application/xhtml+xml,application/xml;q=0."+(ran.nextInt(5)+5)+",image/webp,image/apng,*/*;q=0."+(ran.nextInt(5)+5));
         con.header("Accept-Encoding", "gzip, deflate, br");
-        con.header("Accept-Language", "zh-CN,zh;q=0.9");
+        con.header("Accept-Language", "zh-CN,zh;q=0."+(ran.nextInt(5)+5));
         con.header("Connection", "keep-alive");
         con.header("Upgrade-Insecure-Requests", "1");
         con.proxy(ip, post);

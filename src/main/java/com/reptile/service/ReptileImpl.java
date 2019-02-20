@@ -43,7 +43,7 @@ public class ReptileImpl implements IReptile{
 		com.reptile.entity.ArticleExample.Criteria c = articleExample.createCriteria();
 //		c.andArticleTypeIdEqualTo(record.getArticleTypeId());
 		c.andStateEqualTo(1);
-		List<ArticleWithBLOBs> list = articleMapper.selectaData(articleExample);
+		List<ArticleWithBLOBs> list = articleMapper.selectArticleData(articleExample);
 //		List idList = new ArrayList();
 //		List dataList = new ArrayList();
 ////

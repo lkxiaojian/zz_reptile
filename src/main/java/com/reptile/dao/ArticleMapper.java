@@ -19,6 +19,7 @@ public interface ArticleMapper {
     List<ArticleWithBLOBs> selectByExampleWithBLOBs(ArticleExample example);
 
     List<ArticleWithBLOBs> selectaData(ArticleExample example);
+    List<ArticleWithBLOBs> selectArticleData(ArticleExample example);
 
     List<Article> selectByExample(ArticleExample example);
 

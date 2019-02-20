@@ -1,5 +1,6 @@
 package com.reptile.task;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
@@ -10,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -30,6 +33,7 @@ import com.reptile.service.IReptile;
 
 @Component
 @EnableScheduling
+//@EnableAsync
 public class SchedulerTask {
 	private static final Logger log = LoggerFactory.getLogger(SchedulerTask.class);
 
@@ -67,6 +71,11 @@ public class SchedulerTask {
 	    public void job23() {
 	    	job2(3);
 	    }
+
+//		@Scheduled(cron = "${TASK_TIME}")
+//		public void job24() {
+//		job2(5);
+//	}
 	    
 	    public void job2(int ii ){
 	    	PageHelper.startPage(ii, DATA_NUM);
@@ -113,6 +122,7 @@ public class SchedulerTask {
 					 contentDiv = document.getElementById("img-content");
 					 if(contentDiv==null) {
 						 record.setState(2);
+						 log.info("插入文章没找到"+detailsPath);
 					 }else {
 						 contentTxt = contentDiv.text();
 						 String div = contentDiv.toString();
@@ -148,15 +158,25 @@ public class SchedulerTask {
 	    
 //	    @Scheduled(cron = "${ArticleTask}")
 	    @Scheduled(initialDelay=100,fixedDelay=1000*60*5)
+//		@Scheduled(cron = "0 0/1 * * * ? ")
+//		@Scheduled(cron = "0 0 0/1 * * ? ")
+//		@Async
 	    public void job1(){
 		   try {
 			   ArticleTypeExample example = new ArticleTypeExample();
 				Criteria cl  = example.createCriteria();
 				cl.andParentidNotEqualTo(0);
-				
-				PageHelper.startPage(1, KEYWORK_NUM);
-				List<ArticleType> listArticleType = articleTypeMapper.selectKeyWork(INTERVAL_DAY);
-				
+
+			   List<ArticleType> listArticleType= new ArrayList<ArticleType>();
+				if(true){
+					PageHelper.startPage(1, KEYWORK_NUM);
+					listArticleType = articleTypeMapper.selectKeyWork(INTERVAL_DAY,0,0);
+
+				}else{
+					Calendar cld = Calendar.getInstance();//可以对每个时间域单独修改
+					int hour = cld.get(Calendar.HOUR_OF_DAY);
+					listArticleType = articleTypeMapper.selectKeyWork(INTERVAL_DAY,24,hour);
+				}
 	    		IpPostEntity ipPostEntity = new IpPostEntity();
 	    		ipPostEntity.setState(1);
 		    	List<IpPostEntity> ipPost = mapper.selectIpPost(ipPostEntity);
@@ -166,10 +186,10 @@ public class SchedulerTask {
 //		    	if(hour<listArticleType.size()) {
 //		    		gather.setData(1,listArticleType.get(hour),ipPost);
 //		    	}
-		    	
 		    	for (ArticleType articleType : listArticleType) {
 		    		gather.setData(1,articleType,ipPost);
-		    		articleTypeMapper.updateLastTime(articleType);
+					log.info(articleType.getArticleTypeKeyword()+"插入结束");
+					articleTypeMapper.updateLastTime(articleType);
 				}
 		    	articleTypeMapper.deleteByPrimaryKey(2);
 
