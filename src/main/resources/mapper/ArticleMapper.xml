@@ -399,13 +399,11 @@
     <update id="updateByDetails" parameterType="map">
         update article1
         set
-        state = #{record.state,jdbcType=DOUBLE}
-        <!--
+        state = #{record.state,jdbcType=DOUBLE},
         update_time = now() ,
         details_txt = #{record.detailsTxt,jdbcType=LONGVARBINARY},
         details_size = #{record.collectInitcount,jdbcType=DOUBLE},
         details_div = #{record.detailsDiv,jdbcType=LONGVARBINARY}
-         -->
         where article_id = #{record.articleId,jdbcType=VARCHAR}
     </update>
 
