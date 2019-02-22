@@ -21,14 +21,15 @@ public class KeywordController {
      * @return
      */
     @RequestMapping(value = "article/addKeyword", method = RequestMethod.GET)
-    public Map<String, Object> addKeyword(String param, String uUid) {
+    public Map<String, Object> addKeyword(String param, String uUid,String parent_id) {
         Map<String, Object> maps = null;
-        if (param == null || "".equals(param) || uUid == null || "".equals(uUid)) {
+        if (param == null || "".equals(param) || uUid == null || "".equals(uUid)|| parent_id == null || "".equals(parent_id)) {
             return getErrorMap();
         }
         Map<String, Object> map = new HashMap<>();
         map.put("keyword", param);
         map.put("uUid", uUid);
+        map.put("parent_id", parent_id);
 
         try {
             maps = articleService.addKeyword(map);
@@ -46,14 +47,14 @@ public class KeywordController {
      * @return
      */
     @RequestMapping(value = "article/updateKeyword", method = RequestMethod.GET)
-    public Map<String, Object> updateKeyword(String id, String keyword_name) {
+    public Map<String, Object> updateKeyword(String id, String keyword_name,String parent_id) {
         Map<String, Object> maps = null;
-        if (keyword_name == null || "".equals(keyword_name) || id == null || "".equals(id)) {
+        if (keyword_name == null || "".equals(keyword_name) || id == null || "".equals(id) || parent_id == null || "".equals(parent_id)) {
             return getErrorMap();
         }
 
         try {
-            maps = articleService.updateKeyword(id, keyword_name);
+            maps = articleService.updateKeyword(id, keyword_name,parent_id);
         } catch (Exception e) {
             e.printStackTrace();
             return getErrorMapService();

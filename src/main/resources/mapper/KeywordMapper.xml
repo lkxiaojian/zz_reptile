@@ -27,28 +27,28 @@
             SELECT LAST_INSERT_ID()
         </selectKey>
         insert into chat.keyword (id,keyword_name, create_time,
-        last_time,del_type)
+        last_time,del_type,parent_id)
         values
         <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.id},#{item.keywordName},#{item.createTime},#{item.lastTime},#{item.del_type})
+            (#{item.id},#{item.keywordName},#{item.createTime},#{item.lastTime},#{item.del_type},#{item.parent_id})
         </foreach>
     </insert>
 
 
-
-    <update id="updateKeyword" parameterType="com.reptile.entity.Keyword" >
+    <update id="updateKeyword" parameterType="com.reptile.entity.Keyword">
         update chat.keyword
          set keyword_name = #{keywordName},
-        update_time = #{updateTime}
+        update_time = #{updateTime},
+        parent_id=#{parent_id}
          where id = #{id}
     </update>
 
-    <delete id="delKeyword" parameterType="java.lang.String" >
+    <delete id="delKeyword" parameterType="java.lang.String">
         DELETE FROM chat.keyword where id=#{id}
     </delete>
 
 
-    <update id="updateDelKeyword" parameterType="com.reptile.entity.Keyword" >
+    <update id="updateDelKeyword" parameterType="com.reptile.entity.Keyword">
         update chat.keyword
         set del_type = #{del_type}
         where id = #{id}

@@ -79,7 +79,7 @@ USER_AGENT: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like 
 DATA_NUM: 15
 
 KEYWORK_NUM: 10
-INTERVAL_DAY: 5
+INTERVAL_DAY: 10
 #插入文章
 TASK_TIME: 0 0/2 * * * ?
 #文章概要扫描

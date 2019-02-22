@@ -20,7 +20,8 @@ public class ArticleIml implements ArticleService {
         Map<String, Object> map = new HashMap<>();
         String keyworads = data.get("keyword").toString();
         Date nowDate = DateUtil.getNowDate();
-        Date dateyy = DateUtil.getDateyy("2017-01-01");
+        Date dateyy = DateUtil.getDateyy("2019-01-01");
+        String parent_id = data.get("parent_id").toString();
 
         List<Keyword> list = new ArrayList<>();
 //        for (int i = 0; i < keyworads.length; i++) {
@@ -30,6 +31,7 @@ public class ArticleIml implements ArticleService {
         keyword.setLastTime(dateyy);
         keyword.setId(data.get("uUid").toString());
         keyword.setDel_type(1);
+        keyword.setParent_id(parent_id);
         list.add(keyword);
 //        }
         if (list.size() > 0) {
@@ -42,12 +44,13 @@ public class ArticleIml implements ArticleService {
     }
 
     @Override
-    public Map<String, Object> updateKeyword(String id, String keyword_name) throws Exception {
+    public Map<String, Object> updateKeyword(String id, String keyword_name,String parent_id) throws Exception {
         Map<String, Object> map = new HashMap<>();
         Keyword keyword = new Keyword();
         keyword.setId(id);
         keyword.setKeywordName(keyword_name);
         keyword.setUpdateTime(new Date());
+        keyword.setParent_id(parent_id);
         int i = keywordMapper.updateKeyword(keyword);
         if (i == 1) {
             map.put("code", 0);
