@@ -30,7 +30,7 @@ public class ArticleIml implements ArticleService {
         keyword.setCreateTime(nowDate);
         keyword.setLastTime(dateyy);
         keyword.setId(data.get("uUid").toString());
-        keyword.setDel_type(1);
+        keyword.setDel_type(0);
         keyword.setParent_id(parent_id);
         list.add(keyword);
 //        }
