@@ -14,4 +14,6 @@ public interface AcademicPaperMapper {
     List<Map<String,Object>> getData(Map<String, Object> map);
 
     int getCountByName(Map<String, Object> map);
+
+    List<Map<String,Object>> ArithmeticPaperTmp(Map<String, Object> parmMap);
 }

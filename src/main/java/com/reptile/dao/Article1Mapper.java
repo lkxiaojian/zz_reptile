@@ -1,4 +1,5 @@
 package com.reptile.dao;
+
 import com.reptile.entity.Article1;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,5 +14,7 @@ public interface Article1Mapper {
 
     int getWxDataCount(Map<String, Object> map);
 
-    List<Map<String,Object>> getWxData(Map<String, Object> paremMap);
+    List<Map<String, Object>> getWxData(Map<String, Object> paremMap);
+
+    List<Map<String, Object>> ArithmeticArticle(Map<String, Object> paremMap);
 }
