@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.reptile.dao.AcademicPaperMapper">
-  <resultMap id="BaseResultMap" type="com.reptile.entity.AcademicPaper">
-    <result column="article_id" jdbcType="INTEGER" property="articleId" />
-    <result column="article_title" jdbcType="VARCHAR" property="articleTitle" />
-    <result column="article_keyword" jdbcType="VARCHAR" property="articleKeyword" />
-    <result column="author" jdbcType="VARCHAR" property="author" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="create_time" jdbcType="VARCHAR" property="createTime" />
-    <result column="source" jdbcType="VARCHAR" property="source" />
-    <result column="content_type" jdbcType="INTEGER" property="contentType" />
-    <result column="content_excerpt" jdbcType="VARCHAR" property="contentExcerpt" />
-    <result column="image_path" jdbcType="VARCHAR" property="imagePath" />
-    <result column="posting_name" jdbcType="VARCHAR" property="postingName" />
-    <result column="article_title_e" jdbcType="VARCHAR" property="articleTitleE" />
-    <result column="word_count" jdbcType="INTEGER" property="wordCount" />
-    <result column="content_excerpt_e" jdbcType="VARCHAR" property="contentExcerptE" />
-    <result column="pdf_path" jdbcType="VARCHAR" property="pdfPath" />
-    <result column="article_keyword_e" jdbcType="VARCHAR" property="articleKeywordE" />
-    <result column="author_e" jdbcType="VARCHAR" property="authorE" />
-    <result column="site_number" jdbcType="INTEGER" property="siteNumber" />
-    <result column="seach_keyword" jdbcType="VARCHAR" property="seachKeyword" />
-    <result column="publication_date" jdbcType="VARCHAR" property="publicationDate" />
-    <result column="details_txt" jdbcType="LONGVARBINARY" property="detailsTxt" />
-    <result column="details_div" jdbcType="LONGVARBINARY" property="detailsDiv" />
-    <result column="reference" jdbcType="LONGVARCHAR" property="reference" />
-  </resultMap>
-  <insert id="insert" parameterType="com.reptile.entity.AcademicPaper">
+    <resultMap id="BaseResultMap" type="com.reptile.entity.AcademicPaper">
+        <result column="article_id" jdbcType="INTEGER" property="articleId"/>
+        <result column="article_title" jdbcType="VARCHAR" property="articleTitle"/>
+        <result column="article_keyword" jdbcType="VARCHAR" property="articleKeyword"/>
+        <result column="author" jdbcType="VARCHAR" property="author"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="create_time" jdbcType="VARCHAR" property="createTime"/>
+        <result column="source" jdbcType="VARCHAR" property="source"/>
+        <result column="content_type" jdbcType="INTEGER" property="contentType"/>
+        <result column="content_excerpt" jdbcType="VARCHAR" property="contentExcerpt"/>
+        <result column="image_path" jdbcType="VARCHAR" property="imagePath"/>
+        <result column="posting_name" jdbcType="VARCHAR" property="postingName"/>
+        <result column="article_title_e" jdbcType="VARCHAR" property="articleTitleE"/>
+        <result column="word_count" jdbcType="INTEGER" property="wordCount"/>
+        <result column="content_excerpt_e" jdbcType="VARCHAR" property="contentExcerptE"/>
+        <result column="pdf_path" jdbcType="VARCHAR" property="pdfPath"/>
+        <result column="article_keyword_e" jdbcType="VARCHAR" property="articleKeywordE"/>
+        <result column="author_e" jdbcType="VARCHAR" property="authorE"/>
+        <result column="site_number" jdbcType="INTEGER" property="siteNumber"/>
+        <result column="seach_keyword" jdbcType="VARCHAR" property="seachKeyword"/>
+        <result column="publication_date" jdbcType="VARCHAR" property="publicationDate"/>
+        <result column="details_txt" jdbcType="LONGVARBINARY" property="detailsTxt"/>
+        <result column="details_div" jdbcType="LONGVARBINARY" property="detailsDiv"/>
+        <result column="reference" jdbcType="LONGVARCHAR" property="reference"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.reptile.entity.AcademicPaper">
     insert into academic_paper (article_id, article_title, article_keyword, 
       author, update_time, create_time, 
       `source`, content_type, content_excerpt, 
@@ -44,7 +44,7 @@
       #{seachKeyword,jdbcType=VARCHAR}, #{publicationDate,jdbcType=VARCHAR}, #{detailsTxt,jdbcType=LONGVARBINARY}, 
       #{detailsDiv,jdbcType=LONGVARBINARY}, #{reference,jdbcType=LONGVARCHAR})
   </insert>
-  <select id="selectAll" resultMap="BaseResultMap">
+    <select id="selectAll" resultMap="BaseResultMap">
     select article_id, article_title, article_keyword, author, update_time, create_time, 
     `source`, content_type, content_excerpt, image_path, posting_name, article_title_e, 
     word_count, content_excerpt_e, pdf_path, article_keyword_e, author_e, site_number, 
@@ -53,22 +53,21 @@
   </select>
 
 
-
-  <select id="getData" parameterType="java.util.Map" resultType="java.util.Map">
+    <select id="getData" parameterType="java.util.Map" resultType="java.util.Map">
     select article_id, pdf_path,article_title,update_time,content_excerpt_e,content_excerpt
-    from academic_paper WHERE posting_name=#{type} ORDER BY update_time LIMIT #{page},#{rows}
+    from academic_paper where article_title!='' AND  content_excerpt !='' ORDER BY update_time ASC LIMIT #{page},#{rows}
   </select>
 
 
-  <select id="getCountByName" parameterType="java.util.Map" resultType="java.lang.Integer">
+    <select id="getCountByName" parameterType="java.util.Map" resultType="java.lang.Integer">
     select count(*) as count
-    from academic_paper WHERE posting_name=#{type}
+    from academic_paper
   </select>
 
 
-  <select id="ArithmeticPaperTmp" parameterType="java.util.Map" resultType="java.util.Map">
+    <select id="ArithmeticPaperTmp" parameterType="java.util.Map" resultType="java.util.Map">
     select  article_title,article_id ,article_keyword,author,create_time,source,content_excerpt,image_path,posting_name,article_title_e,content_excerpt_e,pdf_path,article_keyword_e,author_e,reference,site_number,seach_keyword,publication_date
-    from chat.academic_paper
+    from chat.academic_paper AND content_excerpt !='' AND content_excerpt !=''
     ORDER BY update_time ASC LIMIT #{page},#{rows}
   </select>
 </mapper>
