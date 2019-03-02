@@ -30,7 +30,7 @@ public class ParperServiceIml implements ParperService {
         }
         Map<String, Object> map = new HashMap<>();
         map.put("rows", rows);
-        map.put("page", (page - 1) * rows);
+        map.put("page", page  * rows);
         map.put("type", type);
 
         List<Map<String, Object>> maps = academicPaperMapper.getData(map);
@@ -68,7 +68,7 @@ public class ParperServiceIml implements ParperService {
     public Map getWxData(int rows, int page, String type) throws Exception {
         Map<String, Object> paremMap = new HashMap<>();
         paremMap.put("rows", rows);
-        paremMap.put("page", (page - 1) * rows);
+        paremMap.put("page", page * rows);
         paremMap.put("type", type);
 
         int wxDataCount = article1Mapper.getWxDataCount(paremMap);
