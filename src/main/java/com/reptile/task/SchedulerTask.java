@@ -33,50 +33,52 @@ import com.reptile.service.IReptile;
 
 @Component
 @EnableScheduling
-//@EnableAsync
+@EnableAsync
 public class SchedulerTask {
 	private static final Logger log = LoggerFactory.getLogger(SchedulerTask.class);
 
 		@Autowired
 		private ArticleMapper articleMapper;
-		
+
 		@Autowired
 		private IReptile reptileImpl;
 		@Autowired
 		private ReptileDao mapper;
 		@Autowired
 		private ArticleTypeMapper articleTypeMapper;
-		
+
 		@Autowired
 		private Gather gather;
-		
+
+		private boolean bool = true;
+
 		@Value("${ARTICLE_COOKIE}")
 		private String ARTICLE_COOKIE ;
-		
+
 		@Value("${DATA_NUM}")
 		private int DATA_NUM ;
-		
+
 		@Value("${KEYWORK_NUM}")
 		private int KEYWORK_NUM ;
-		
+
 		@Value("${INTERVAL_DAY}")
 		private Integer INTERVAL_DAY ;
-		
-	    @Scheduled(cron = "${TASK_TIME}")
-	    public void job22() {
-	    	job2(1);
-	    }
-	    
-	    @Scheduled(cron = "${TASK_TIME}")
-	    public void job23() {
-	    	job2(3);
-	    }
+
+//	    @Scheduled(cron = "${TASK_TIME}")
+//	    public void job22() {
+//	    	job2(1);
+//	    }
+//
+//	    @Scheduled(cron = "${TASK_TIME}")
+//	    public void job23() {
+//	    	job2(3);
+//	    }
 
 //		@Scheduled(cron = "${TASK_TIME}")
 //		public void job24() {
-//		job2(5);
-//	}
-	    
+//			job2(5);
+//		}
+
 	    public void job2(int ii ){
 	    	PageHelper.startPage(ii, DATA_NUM);
 	    	ArticleExample example = new ArticleExample();
@@ -92,7 +94,7 @@ public class SchedulerTask {
 	    	String detailsPath = null;
 	    	int i =0 ;
 	    	String maxInfo ="";
-	    	
+
 	    	List<IpPostEntity> ipPost = null;
 	    	if(list!=null&&list.size()>0) {
 	    		IpPostEntity ipPostEntity = new IpPostEntity();
@@ -114,6 +116,18 @@ public class SchedulerTask {
 								maxInfo.indexOf("Server dropped connection")!=-1||
 								maxInfo.indexOf("Host Not Found or connection failed")!=-1
 								) {
+
+							if(article.getGetState()==2) {
+								record.setState(3);
+								record.setArticleId(articleId);
+								articleMapper.updateByDetails(record);
+							}else{
+								if(article.getGetState()>3){
+									articleTypeMapper.deleteById(articleId);
+								}
+								continue;
+							}
+							articleMapper.setGetStartAdd(articleId);
 							continue;}
 					}else {
 						continue;
@@ -121,8 +135,17 @@ public class SchedulerTask {
 					record = new ArticleWithBLOBs();
 					 contentDiv = document.getElementById("img-content");
 					 if(contentDiv==null) {
-						 record.setState(2);
-						 log.info("插入文章没找到"+detailsPath);
+						 if(article.getGetState()==2){
+							 record.setState(3);
+							 record.setArticleId(articleId);
+							 articleMapper.updateByDetails(record);
+						 }else{
+							 if(article.getGetState()>3){
+								 articleTypeMapper.deleteById(articleId);
+							 }
+						 }
+						 articleMapper.setGetStartAdd(articleId);
+						 continue;
 					 }else {
 						 contentTxt = contentDiv.text();
 						 String div = contentDiv.toString();
@@ -137,13 +160,13 @@ public class SchedulerTask {
 					 record.setArticleId(articleId);
 					articleMapper.updateByDetails(record);
 					articleId = null;
-					
-//					Thread.sleep(ran.nextInt(2000));
+
+					Thread.sleep(ran.nextInt(2000));
 				} catch (Exception e) {
 					 try {
 //						 Thread.sleep(ran.nextInt(18000));
 						 log.error("插入文章链接错误！"+record+":"+e.toString());
-						record.setState(2);
+						record.setState(3);
 						 record.setDetailsDiv(null);
 						 record.setDetailsTxt(null);
 						articleMapper.updateByDetails(record);
@@ -155,7 +178,7 @@ public class SchedulerTask {
 			}
 	    }
 
-	    
+
 //	    @Scheduled(cron = "${ArticleTask}")
 	    @Scheduled(initialDelay=100,fixedDelay=1000*60*5)
 //		@Scheduled(cron = "0 0/1 * * * ? ")
@@ -168,7 +191,7 @@ public class SchedulerTask {
 				cl.andParentidNotEqualTo(0);
 
 			   List<ArticleType> listArticleType= new ArrayList<ArticleType>();
-				if(true){
+				if(bool){
 					PageHelper.startPage(1, KEYWORK_NUM);
 					listArticleType = articleTypeMapper.selectKeyWork(INTERVAL_DAY,0,0);
 
@@ -191,11 +214,11 @@ public class SchedulerTask {
 					log.info(articleType.getArticleTypeKeyword()+"插入结束");
 					articleTypeMapper.updateLastTime(articleType);
 				}
-		    	articleTypeMapper.deleteByPrimaryKey(2);
+//		    	articleTypeMapper.deleteByPrimaryKey(2);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	    }
-		   
+
 }

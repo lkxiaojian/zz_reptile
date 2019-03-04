@@ -1,28 +1,30 @@
 package com.reptile.task;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.catalina.mapper.Mapper;
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
+import com.github.pagehelper.PageHelper;
+import com.reptile.dao.ArticleMapper;
+import com.reptile.dao.ArticleTypeMapper;
+import com.reptile.dao.ReptileDao;
+import com.reptile.entity.Article;
+import com.reptile.entity.ArticleExample;
+import com.reptile.entity.ArticleWithBLOBs;
+import com.reptile.entity.IpPostEntity;
+import com.reptile.service.Gather;
+import com.reptile.service.IReptile;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
+import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.reptile.dao.ReptileDao;
-import com.reptile.entity.IpPostEntity;
-import com.reptile.entity.ReptileEntity;
-import com.reptile.service.IReptile;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.util.List;
+import java.util.Random;
 
 @Component
 @EnableScheduling
@@ -31,25 +33,147 @@ public class ArticleTask {
 	private static final Logger log = LoggerFactory.getLogger(ArticleTask.class);
 
 	@Autowired
+	private ArticleMapper articleMapper;
+
+	@Value("${ARTICLE_COOKIE}")
+	private String ARTICLE_COOKIE ;
+	@Value("${DATA_NUM}")
+	private int DATA_NUM ;
+
+	@Autowired
 	private IReptile reptileImpl;
-	
+
 	private volatile List list;
-	
+
 	@Autowired
 	private ReptileDao mapper;
+	@Autowired
+	private ArticleTypeMapper articleTypeMapper;
 
-//	@Scheduled(initialDelay = 3000,fixedRate = 6000)
-//    public void job1(){
-//		list.add("1");
-//		System.out.println(Thread.currentThread().getName()+"当前集合数据数："+list.size());
-//		
-//   }
-//    
-//	@Scheduled(initialDelay = 3000,fixedRate = 2000)
-//    public void job2(){
-//		System.out.println(Thread.currentThread().getName()+"当前集合数据数："+list.size());
-//   }
-    
+
+	@Scheduled(cron = "${TASK_TIME}")
+	public void job22() {
+		job2(1);
+	}
+
+	@Scheduled(cron = "${TASK_TIME}")
+	public void job23() {
+		job2(3);
+	}
+
+	@Scheduled(cron = "${TASK_TIME}")
+	public void job24() {
+		job2(5);
+	}
+
+//	@Scheduled(cron = "0 0/5 * * * ?")
+//	public void job25() {
+//		job2(7);
+//	}
+//
+//	@Scheduled(cron = "0 0/5 * * * ?")
+//	public void job26() {
+//		job2(9);
+//	}
+
+	public void job2(int ii ){
+		PageHelper.startPage(ii, DATA_NUM);
+		ArticleExample example = new ArticleExample();
+		com.reptile.entity.ArticleExample.Criteria c  =  example.createCriteria();
+		c.andStateEqualTo(0);
+		List<Article> list = articleMapper.selectByExample(example);
+		Document document = null;
+		ArticleWithBLOBs record = null;
+		Element contentDiv = null;
+		String contentTxt = null;
+		String articleId = null;
+		Random ran = new Random();
+		String detailsPath = null;
+		int i =0 ;
+		String maxInfo ="";
+
+		List<IpPostEntity> ipPost = null;
+		if(list!=null&&list.size()>0) {
+			IpPostEntity ipPostEntity = new IpPostEntity();
+			ipPostEntity.setState(1);
+			ipPost = mapper.selectIpPost(ipPostEntity);
+		}
+		for (Article article : list) {
+			articleId = article.getArticleId();
+			detailsPath = article.getDetailsPath();
+			try {
+				i=0;
+				document = Gather.getHeader( ran, detailsPath,ipPost,i,ARTICLE_COOKIE);
+				if(document!=null) {
+					maxInfo = document.getElementsByTag("body").text();
+					if(maxInfo==null||"Maximum number of open connections reached.".equals(maxInfo)||
+							"".equals(maxInfo)||
+							maxInfo.startsWith("Not Found")||
+							maxInfo.indexOf("Internal Privoxy Error")!=-1||
+							maxInfo.indexOf("Server dropped connection")!=-1||
+							maxInfo.indexOf("Host Not Found or connection failed")!=-1
+					) {
+						if(article.getGetState()==2) {
+							record.setState(3);
+							record.setArticleId(articleId);
+							articleMapper.updateByDetails(record);
+						}else{
+							if(article.getGetState()>3){
+								articleTypeMapper.deleteById(articleId);
+							}
+						}
+						articleMapper.setGetStartAdd(articleId);
+						continue;}
+				}else {
+					continue;
+				}
+				record = new ArticleWithBLOBs();
+				contentDiv = document.getElementById("img-content");
+				if(contentDiv==null) {
+					if(article.getGetState()==2){
+						record.setState(3);
+						record.setArticleId(articleId);
+						articleMapper.updateByDetails(record);
+					}else{
+						if(article.getGetState()>3){
+							articleTypeMapper.deleteById(articleId);
+						}
+					}
+					articleMapper.setGetStartAdd(articleId);
+					continue;
+				}else {
+					contentTxt = contentDiv.text();
+					String div = contentDiv.toString();
+					div = div.replace("data-src=", "src=");
+					div = div.substring(0,div.indexOf("<script nonce"));
+					div =div+"</div>";
+					record.setDetailsDiv(div.getBytes());
+					record.setDetailsTxt(contentTxt.getBytes());
+					record.setCollectInitcount(contentTxt.length());
+					record.setState(1);
+				}
+				record.setArticleId(articleId);
+				articleMapper.updateByDetails(record);
+				articleId = null;
+
+					Thread.sleep(ran.nextInt(2000));
+			} catch (Exception e) {
+				try {
+//						 Thread.sleep(ran.nextInt(18000));
+					log.error("插入文章链接错误！"+record+":"+e.toString());
+					record.setState(3);
+					record.setDetailsDiv(null);
+					record.setDetailsTxt(null);
+					articleMapper.updateByDetails(record);
+				} catch (Exception e1) {
+					log.error("修改文章状态为2错误！！"+record);
+				}
+			}
+			log.info("插入文章链接："+detailsPath);
+		}
+	}
+
+
 //	@Scheduled(initialDelay = 3000)
 //	 @Scheduled(cron = "0 0 4 * * ?")
 	@Scheduled(cron = "${setIpPost}")
@@ -66,15 +190,15 @@ public class ArticleTask {
 				mapper.insertsIpPost(i);
 			}
 		}
-		
+
 		ipPostEntity.setState(1);
 		l = mapper.selectIpPost(ipPostEntity);
 
 		log.info("刷新IP成功，当前IP数量："+l.size());
-		
+
    }
-   
-	
+
+
 	public void connect(String server, int servPort) throws Exception {
         Socket socket = new Socket();
         socket.setReceiveBufferSize(servPort);

@@ -11,17 +11,20 @@ import org.apache.ibatis.annotations.Param;
 public interface ArticleTypeMapper {
     int deleteByPrimaryKey(Integer articleTypeId);
 
+    int deleteById(String articleId);
+
+
     int insert(ArticleType record);
 
     int insertSelective(ArticleType record);
 
     List<ArticleType> selectByExample(ArticleTypeExample example);
-    
+
     List<ArticleType> selectKeyWork(@Param("day") Integer day,@Param("threadNum") Integer threadNum,@Param("rem") Integer rem);
 
     int updateLastTime( ArticleType articleType);
 
-  
+
     ArticleType selectByPrimaryKey(Integer articleTypeId);
 
     int updateByPrimaryKeySelective(ArticleType record);

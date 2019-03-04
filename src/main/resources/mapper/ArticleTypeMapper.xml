@@ -10,8 +10,8 @@
     <result column="iamge_back" jdbcType="VARCHAR" property="iamgeBack" />
     <result column="parentid" jdbcType="INTEGER" property="parentid" />
   </resultMap>
-  
-  
+
+
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -42,18 +42,18 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    article_type_id, article_type_name, article_type_keyword, create_time, iamge_icon, 
+    article_type_id, article_type_name, article_type_keyword, create_time, iamge_icon,
     iamge_back, parentid
   </sql>
-  
-  
-  
-  
+
+
+
+
    <select id="selectKeyWork" parameterType="java.lang.Integer" resultMap="BaseResultMap">
 
 	SELECT id article_type_id ,
 	keyword_name article_type_keyword ,
-	DATE_FORMAT(last_time,'%Y-%m-%d') iamge_icon,
+    DATE_FORMAT(DATE_ADD(last_time, INTERVAL 1 DAY),'%Y-%m-%d') iamge_icon,
 	DATE_FORMAT(DATE_ADD(last_time, INTERVAL #{day,jdbcType=INTEGER} DAY),'%Y-%m-%d') iamge_back
 	FROM keyword WHERE del_type = 0
 	<!--
@@ -63,19 +63,19 @@
        and id%#{threadNum,jdbcType=INTEGER}=#{rem,jdbcType=INTEGER}
      </if>
 	and DATE_ADD(last_time, INTERVAL #{day,jdbcType=INTEGER} DAY) &lt;= NOW()
-	ORDER BY last_time 
-	
+	ORDER BY last_time
+
   </select>
-  
+
     <update id="updateLastTime" parameterType="com.reptile.entity.ArticleType">
     	UPDATE keyword SET last_time=#{iamgeBack}
 		where id = #{articleTypeId,jdbcType=INTEGER}
 	</update>
-  
-  
-  
-  
-  
+
+
+
+
+
   <select id="selectByExample" parameterType="com.reptile.entity.ArticleTypeExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -91,7 +91,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from article_type
     where article_type_id = #{articleTypeId,jdbcType=INTEGER}
@@ -100,12 +100,17 @@
     delete from article1
     where state = #{articleTypeId,jdbcType=INTEGER}
   </delete>
+  <delete id="deleteById" parameterType="java.lang.String">
+    delete from article1
+    where article_Id = #{articleId,jdbcType=VARCHAR}
+  </delete>
+
   <insert id="insert" parameterType="com.reptile.entity.ArticleType">
-    insert into article_type (article_type_id, article_type_name, article_type_keyword, 
-      create_time, iamge_icon, iamge_back, 
+    insert into article_type (article_type_id, article_type_name, article_type_keyword,
+      create_time, iamge_icon, iamge_back,
       parentid)
-    values (#{articleTypeId,jdbcType=INTEGER}, #{articleTypeName,jdbcType=VARCHAR}, #{articleTypeKeyword,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{iamgeIcon,jdbcType=VARCHAR}, #{iamgeBack,jdbcType=VARCHAR}, 
+    values (#{articleTypeId,jdbcType=INTEGER}, #{articleTypeName,jdbcType=VARCHAR}, #{articleTypeKeyword,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP}, #{iamgeIcon,jdbcType=VARCHAR}, #{iamgeBack,jdbcType=VARCHAR},
       #{parentid,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.reptile.entity.ArticleType">

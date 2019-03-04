@@ -21,6 +21,8 @@
         <result column="image_path" jdbcType="VARCHAR" property="imagePath" />
         <result column="state" jdbcType="DOUBLE" property="state" />
         <result column="details_path" jdbcType="VARCHAR" property="detailsPath" />
+        <result column="get_state" jdbcType="DOUBLE" property="getState" />
+
     </resultMap>
     <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.reptile.entity.ArticleWithBLOBs">
         <result column="content_crawl" jdbcType="LONGVARBINARY" property="contentCrawl" />
@@ -98,7 +100,7 @@
     article_id, article_type_id, article_title, article_keyword, author, update_time,
     create_time, source, share_count, collect_count, collect_initcount, share_initcount,
     content_type, content_manual, content_readcount, content_excerpt, image_path, state,
-    details_path
+    details_path,get_state
   </sql>
     <sql id="Blob_Column_List">
     content_crawl, details_txt, details_div
@@ -132,6 +134,9 @@
         '')
     </update>
 
+    <update id="setGetStartAdd" parameterType="java.lang.String">
+        update article1 set get_state = get_state+1 where article_id = #{articleId,jdbcType=VARCHAR}
+    </update>
 
 
     <select id="selectByExampleWithBLOBs" parameterType="com.reptile.entity.ArticleExample" resultMap="ResultMapWithBLOBs">

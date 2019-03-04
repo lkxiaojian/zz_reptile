@@ -22,6 +22,7 @@ public class Article {
     private Integer shareCount;
 
     private Integer collectCount;
+    private Integer getState;
 
     private Integer collectInitcount;
 
@@ -84,6 +85,14 @@ public class Article {
 
     public Date getCreateTime() {
         return createTime;
+    }
+
+    public Integer getGetState() {
+        return getState;
+    }
+
+    public void setGetState(Integer getState) {
+        this.getState = getState;
     }
 
     public void setCreateTime(Date createTime) {

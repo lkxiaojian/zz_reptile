@@ -25,16 +25,16 @@ import java.util.regex.Pattern;
 @PropertySource({"classpath:webUser.properties","classpath:application.yml"})
 
 public class Gather {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(Gather.class);
 
 	 @Value("${WEB_URL}")
 	private String WEB_URL ;
 	@Value("${WEB_COOKIE}")
 	private String WEB_COOKIE ;
-	
+
 	public static List<String> userAgent;
-	
+
 	public List<String> getUserAgent() {
 		return userAgent;
 	}
@@ -42,13 +42,13 @@ public class Gather {
 	public void setUserAgent(List<String> userAgent) {
 		this.userAgent = userAgent;
 	}
-	
+
 	@Value("${WEB_CONDITION}")
 	private String WEB_CONDITION ;
-	
+
 	@Autowired
 	private ReptileDao mapper;
-	
+
 //	public void getData(int contentType,String query,Integer articleTypeId) {
 //
 //		StringBuffer sb = new StringBuffer();
@@ -120,17 +120,17 @@ public class Gather {
 //		}
 //
 //	}
-	
-	
+
+
 	public int getNum(String num) {
-		String regEx="[^0-9]";  
-		Pattern p = Pattern.compile(regEx);  
-		Matcher m = p.matcher(num);  
+		String regEx="[^0-9]";
+		Pattern p = Pattern.compile(regEx);
+		Matcher m = p.matcher(num);
 		System.out.println( m.replaceAll("").trim());
 		return Integer.valueOf( m.replaceAll("").trim() );
 	}
-	
-	
+
+
 	public void setData(int contentType,ArticleType articleType,List<IpPostEntity> ipPost) throws Exception {
 
 		StringBuffer url = new StringBuffer(WEB_URL);
@@ -139,7 +139,7 @@ public class Gather {
 //		url.append("page=11");
 //		url.append("&query=避障");
 		url.append("&query="+articleType.getArticleTypeKeyword().toString().replace("&", "与"));
-		
+
 		 Random ran =  new Random() ;
 		 Element sogouNext = null;
 		 ReptileEntity reptileEntity=null;
@@ -159,7 +159,7 @@ public class Gather {
 		 int i = 0;
 		 String maxInfo ="";
 		 int j = 0;
-			
+
 		while(true) {
 			document = getHeader(ran,urlPath,ipPost,i,WEB_COOKIE);
 			if(document!=null) {
@@ -171,7 +171,7 @@ public class Gather {
 						maxInfo.indexOf("Internal Privoxy Error")!=-1||
 						maxInfo.indexOf("Server dropped connection")!=-1||
 						maxInfo.indexOf("Host Not Found or connection failed")!=-1||
-						maxInfo.length()<300
+						maxInfo.length()<350
 						) {
 //							if(j==3){
 //								break;
@@ -195,43 +195,43 @@ public class Gather {
 			if(elements !=null ) {
 				Elements lis = elements.getElementsByTag("li");
 				if(lis != null) {
-	
+
 					for (Element e : lis) {
-						
+
 						reptileEntity = new ReptileEntity();
 						reptileEntity.setArticleTypeId(articleType.getArticleTypeId());
 						imgtxtBox = e.getElementsByTag("div");
-						
+
 						articleId = e.attr("d");
 						articleId = articleId.substring(articleId.lastIndexOf("-")+1);
 						reptileEntity.setArticleId(articleId);
-						
+
 						detailsPath = imgtxtBox.select("a").first().attr("href");
 						reptileEntity.setDetailsPath(detailsPath);
-						
+
 						reptileEntity.setContentCrawl(imgtxtBox.toString().getBytes());
-	
+
 						articleTitle = imgtxtBox.select("h3").last().text();
 						reptileEntity.setArticleTitle(articleTitle);
-						
+
 						reptileEntity.setArticleKeyword(articleType.getArticleTypeKeyword());
-						
+
 						contentExcerpt = imgtxtBox.select("p").last().text();
 						reptileEntity.setContentExcerpt(contentExcerpt);
-						
+
 						Element txtBox2 = imgtxtBox.get(2);
 						source = txtBox2.getElementsByTag("a").first().text();
 						reptileEntity.setSource(source);
 						createTime =  Long.valueOf(txtBox2.attr("t"));
 						reptileEntity.setCreateTime( createTime);
-						
+
 						reptileEntity.setContentType(contentType);
-						
+
 						mapper.insert(reptileEntity);
 					}
-					log.info("插入信息"+lis.size()+"条");
+//					log.info("插入信息"+articleType.getArticleTypeKeyword()+lis.size()+"条");
 				}
-				
+
 			}
 			sogouNext = document.getElementById("sogou_next");
 			if(sogouNext==null) {
@@ -253,8 +253,8 @@ public class Gather {
 			log.info("访问地址："+urlPath+" ——长度："+maxInfo.length());
 
 		}
-		
-		
+
+
 	}
 
 
@@ -264,8 +264,8 @@ public class Gather {
 		String ip =sp.getIp();
 		int post = sp.getPost();
 		try {
-			Connection con= Jsoup.connect(url);//获取连接 
-		
+			Connection con= Jsoup.connect(url);//获取连接
+
 		con.header("Accept", "text/html,application/xhtml+xml,application/xml;q=0."+(ran.nextInt(5)+5)+",image/webp,image/apng,*/*;q=0."+(ran.nextInt(5)+5));
         con.header("Accept-Encoding", "gzip, deflate, br");
         con.header("Accept-Language", "zh-CN,zh;q=0."+(ran.nextInt(5)+5));
@@ -273,10 +273,10 @@ public class Gather {
         con.header("Upgrade-Insecure-Requests", "1");
         con.proxy(ip, post);
         con.header("User-Agent", userAgent.get(ran.nextInt(userAgent.size())));
-        
+
         con.header("Host", "weixin.sogou.com");
         con.header("Referer", url);
-        
+
         con.header("Cookie", cookie);
 
         con.ignoreContentType(true).ignoreHttpErrors(true);
@@ -296,6 +296,6 @@ public class Gather {
 
 		return  document;
 	}
-	
+
 }
 

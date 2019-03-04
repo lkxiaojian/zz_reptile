@@ -23,6 +23,10 @@ public interface ArticleMapper {
 
     List<Article> selectByExample(ArticleExample example);
 
+    List<Article>  getArticleTitle(Map<String, Object> map);
+    int setGetStartAdd(@Param("articleId") String articleId);
+
+
     int updateDataState(List<String> list);
 
 
