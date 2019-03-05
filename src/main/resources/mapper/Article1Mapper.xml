@@ -60,46 +60,47 @@
 
     <select id="getWxDataCount" parameterType="java.util.Map" resultType="java.lang.Integer">
         select count(*) as count from chat.article1 where 1=1
-        <if test="type==1">
-            AND article_title like '%3D打印%' or article_title like '%增材制造%' or article_title like '%3D 设计%' or
-            article_title like '%3D 建模%'
+        <!--<if test="type==1">-->
+            <!--AND article_title like '%3D打印%' or article_title like '%增材制造%' or article_title like '%3D 设计%' or-->
+            <!--article_title like '%3D 建模%'-->
 
-        </if>
+        <!--</if>-->
 
-        <if test="type==2">
-            AND article_title like '%机器人%' or article_title like '%SLAM%'
+        <!--<if test="type==2">-->
+            <!--AND article_title like '%机器人%' or article_title like '%SLAM%'-->
 
-        </if>
+        <!--</if>-->
 
-        <if test="type==3">
-            AND article_title like '%传感器%' or article_title like '%MEMS 传感%'
-        </if>
+        <!--<if test="type==3">-->
+            <!--AND article_title like '%传感器%' or article_title like '%MEMS 传感%'-->
+        <!--</if>-->
 
-        <if test="type==16">
-            AND article_title like '%智能制造%' or article_title like '%工业4.0%'
-        </if>
+        <!--<if test="type==16">-->
+            <!--AND article_title like '%智能制造%' or article_title like '%工业4.0%'-->
+        <!--</if>-->
+        ${sql}
     </select>
 
 
     <select id="getWxData" parameterType="java.util.Map" resultType="java.util.Map">
         select details_txt,article_title,update_time from chat.article1 where 1=1
-        <if test="type==1">
-            AND article_title like '%3D打印%' or article_title like '%增材制造%' or article_title like '%3D 设计%' or
-            article_title like '%3D 建模%'
-        </if>
+        <!--<if test="type==1">-->
+            <!--AND article_title like '%3D打印%' or article_title like '%增材制造%' or article_title like '%3D 设计%' or-->
+            <!--article_title like '%3D 建模%'-->
+        <!--</if>-->
 
-        <if test="type==2">
-            AND article_title like '%机器人%' or article_title like '%SLAM%'
-        </if>
+        <!--<if test="type==2">-->
+            <!--AND article_title like '%机器人%' or article_title like '%SLAM%'-->
+        <!--</if>-->
 
-        <if test="type==3">
-            AND article_title like '%传感器%' or article_title like '%MEMS 传感%'
-        </if>
+        <!--<if test="type==3">-->
+            <!--AND article_title like '%传感器%' or article_title like '%MEMS 传感%'-->
+        <!--</if>-->
 
-        <if test="type==16">
-            AND article_title like '%智能制造%' or article_title like '%工业4.0%'
-        </if>
-
+        <!--<if test="type==16">-->
+            <!--AND article_title like '%智能制造%' or article_title like '%工业4.0%'-->
+        <!--</if>-->
+         ${sql}
         ORDER BY update_time ASC LIMIT #{page},#{rows}
     </select>
 

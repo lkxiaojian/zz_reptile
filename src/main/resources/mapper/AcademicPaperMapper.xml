@@ -67,7 +67,7 @@
 
     <select id="ArithmeticPaperTmp" parameterType="java.util.Map" resultType="java.util.Map">
     select  article_title,article_id ,article_keyword,author,create_time,source,content_excerpt,image_path,posting_name,article_title_e,content_excerpt_e,pdf_path,article_keyword_e,author_e,reference,site_number,seach_keyword,publication_date
-    from chat.academic_paper AND content_excerpt !='' AND content_excerpt !=''
-    ORDER BY update_time ASC LIMIT #{page},#{rows}
+    from chat.academic_paper WHERE content_excerpt !='' AND article_title  !=''
+     ORDER BY update_time ASC LIMIT #{page},#{rows}
   </select>
 </mapper>

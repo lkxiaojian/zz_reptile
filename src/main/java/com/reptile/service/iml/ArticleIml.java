@@ -44,13 +44,14 @@ public class ArticleIml implements ArticleService {
     }
 
     @Override
-    public Map<String, Object> updateKeyword(String id, String keyword_name,String parent_id) throws Exception {
+    public Map<String, Object> updateKeyword(String id, String keyword_name,String parent_id,int del_type) throws Exception {
         Map<String, Object> map = new HashMap<>();
         Keyword keyword = new Keyword();
         keyword.setId(id);
         keyword.setKeywordName(keyword_name);
         keyword.setUpdateTime(new Date());
         keyword.setParent_id(parent_id);
+        keyword.setDel_type(del_type);
         int i = keywordMapper.updateKeyword(keyword);
         if (i == 1) {
             map.put("code", 0);

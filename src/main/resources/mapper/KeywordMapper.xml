@@ -39,7 +39,8 @@
         update chat.keyword
          set keyword_name = #{keywordName},
         update_time = #{updateTime},
-        parent_id=#{parent_id}
+        parent_id=#{parent_id},
+        del_type=#{del_type}
          where id = #{id}
     </update>
 

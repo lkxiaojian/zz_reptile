@@ -30,7 +30,7 @@ public class ParperServiceIml implements ParperService {
         }
         Map<String, Object> map = new HashMap<>();
         map.put("rows", rows);
-        map.put("page", page  * rows);
+        map.put("page", page * rows);
         map.put("type", type);
 
         List<Map<String, Object>> maps = academicPaperMapper.getData(map);
@@ -70,7 +70,18 @@ public class ParperServiceIml implements ParperService {
         paremMap.put("rows", rows);
         paremMap.put("page", page * rows);
         paremMap.put("type", type);
+//        String sql=" and article_title like '%3D打印%'  or article_title like '%增材制造%' or article_title like '%3D 设计%' or article_title like '%3D 建模%' " ;
+        String sql = "";
+        String[] typeList = type.split(",");
 
+        for (int i=0;i<typeList.length;i++){
+            if(i==0){
+                sql=sql+" and article_title like '%"+typeList[i]+"%' ";
+            }else {
+                sql=sql+" or article_title like '%"+typeList[i]+"%' ";
+            }
+        }
+        paremMap.put("sql", sql);
         int wxDataCount = article1Mapper.getWxDataCount(paremMap);
         List<Map<String, Object>> maps = article1Mapper.getWxData(paremMap);
         for (int i = 0; i < maps.size(); i++) {
