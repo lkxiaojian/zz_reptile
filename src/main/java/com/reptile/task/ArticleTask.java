@@ -149,7 +149,7 @@ public class ArticleTask {
 					div = div.substring(0,div.indexOf("<script nonce"));
 					div =div+"</div>";
 					record.setDetailsDiv(div.getBytes());
-					record.setDetailsTxt(contentTxt.getBytes());
+					record.setDetailsTxt(contentTxt.getBytes("utf-8"));
 					record.setCollectInitcount(contentTxt.length());
 					record.setState(1);
 				}
