@@ -101,5 +101,6 @@ postPath: http://localhost:7903/
 #查询文章分类的页数
 rasterProp:
   path: ..\zz_reptile\src\main\resources\filelist.properties
+   # path: D:\reptiles\filelist.properties
 
 
