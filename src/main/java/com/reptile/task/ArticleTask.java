@@ -143,6 +143,7 @@ public class ArticleTask {
 					continue;
 				}else {
 					contentTxt = contentDiv.text();
+					contentTxt=new String(contentTxt.getBytes(),"UTF-8");
 					String div = contentDiv.toString();
 					div = div.replace("data-src=", "src=");
 					div = div.substring(0,div.indexOf("<script nonce"));
