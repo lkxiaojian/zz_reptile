@@ -33,7 +33,7 @@ import com.reptile.service.IReptile;
 
 @Component
 @EnableScheduling
-@EnableAsync
+//@EnableAsync
 public class SchedulerTask {
 	private static final Logger log = LoggerFactory.getLogger(SchedulerTask.class);
 
@@ -148,12 +148,14 @@ public class SchedulerTask {
 						 continue;
 					 }else {
 						 contentTxt = contentDiv.text();
+						 contentTxt=new String(contentTxt.getBytes(),"UTF-8");
+
 						 String div = contentDiv.toString();
 						 div = div.replace("data-src=", "src=");
 						 div = div.substring(0,div.indexOf("<script nonce"));
 						 div =div+"</div>";
 						 record.setDetailsDiv(div.getBytes());
-						 record.setDetailsTxt(contentTxt.getBytes());
+						 record.setDetailsTxt(contentTxt.getBytes("utf-8"));
 						 record.setCollectInitcount(contentTxt.length());
 						 record.setState(1);
 					 }
@@ -180,45 +182,70 @@ public class SchedulerTask {
 
 
 //	    @Scheduled(cron = "${ArticleTask}")
-	    @Scheduled(initialDelay=100,fixedDelay=1000*60*5)
+	  	@Scheduled(initialDelay=100,fixedDelay=1000*60*5)
 //		@Scheduled(cron = "0 0/1 * * * ? ")
 //		@Scheduled(cron = "0 0 0/1 * * ? ")
 //		@Async
-	    public void job1(){
-		   try {
-			   ArticleTypeExample example = new ArticleTypeExample();
-				Criteria cl  = example.createCriteria();
-				cl.andParentidNotEqualTo(0);
+	public void job1(){
+		try {
+			ArticleTypeExample example = new ArticleTypeExample();
+			Criteria cl  = example.createCriteria();
+			cl.andParentidNotEqualTo(0);
 
-			   List<ArticleType> listArticleType= new ArrayList<ArticleType>();
-				if(bool){
-					PageHelper.startPage(1, KEYWORK_NUM);
-					listArticleType = articleTypeMapper.selectKeyWork(INTERVAL_DAY,0,0);
+			List<ArticleType> listArticleType= new ArrayList<ArticleType>();
+			if(bool){
+				PageHelper.startPage(1, KEYWORK_NUM);
+				listArticleType = articleTypeMapper.selectKeyWork(INTERVAL_DAY,0,0);
 
-				}else{
-					Calendar cld = Calendar.getInstance();//可以对每个时间域单独修改
-					int hour = cld.get(Calendar.HOUR_OF_DAY);
-					listArticleType = articleTypeMapper.selectKeyWork(INTERVAL_DAY,24,hour);
-				}
-	    		IpPostEntity ipPostEntity = new IpPostEntity();
-	    		ipPostEntity.setState(1);
-		    	List<IpPostEntity> ipPost = mapper.selectIpPost(ipPostEntity);
+			}else{
+				Calendar cld = Calendar.getInstance();//可以对每个时间域单独修改
+				int hour = cld.get(Calendar.HOUR_OF_DAY);
+				listArticleType = articleTypeMapper.selectKeyWork(INTERVAL_DAY,24,hour);
+			}
+			IpPostEntity ipPostEntity = new IpPostEntity();
+			ipPostEntity.setState(1);
+			List<IpPostEntity> ipPost = mapper.selectIpPost(ipPostEntity);
 
 //		    	Calendar cld = Calendar.getInstance();//可以对每个时间域单独修改
 //		    	int hour = cld.get(Calendar.HOUR_OF_DAY);
 //		    	if(hour<listArticleType.size()) {
 //		    		gather.setData(1,listArticleType.get(hour),ipPost);
 //		    	}
-		    	for (ArticleType articleType : listArticleType) {
-		    		gather.setData(1,articleType,ipPost);
-					log.info(articleType.getArticleTypeKeyword()+"插入结束");
-					articleTypeMapper.updateLastTime(articleType);
-				}
+			for (ArticleType articleType : listArticleType) {
+				gather.setData(1,articleType,ipPost);
+				log.info(articleType.getArticleTypeKeyword()+"插入结束");
+				articleTypeMapper.updateLastTime(articleType);
+			}
 //		    	articleTypeMapper.deleteByPrimaryKey(2);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	    }
+	}
+
+
+//	@Scheduled(initialDelay=100,fixedDelay=1000*60*5)
+	public void job12(){
+		try {
+			ArticleTypeExample example = new ArticleTypeExample();
+			Criteria cl  = example.createCriteria();
+			cl.andParentidNotEqualTo(0);
+
+			List<ArticleType> listArticleType= new ArrayList<ArticleType>();
+			listArticleType = articleTypeMapper.selectAllKeyWork(0);
+
+			IpPostEntity ipPostEntity = new IpPostEntity();
+			ipPostEntity.setState(1);
+			List<IpPostEntity> ipPost = mapper.selectIpPost(ipPostEntity);
+
+			for (ArticleType articleType : listArticleType) {
+				gather.setData(1,articleType,ipPost);
+				log.info(articleType.getArticleTypeKeyword()+"插入结束");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 }

@@ -67,6 +67,16 @@
 
   </select>
 
+
+  <select id="selectAllKeyWork" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+
+    SELECT id article_type_id ,
+    keyword_name article_type_keyword ,
+    DATE_ADD(DATE_FORMAT(CURDATE(),'%Y-%m-%d') , INTERVAL -30 DAY) iamge_icon,
+    CURDATE() iamge_back
+    FROM keyword WHERE del_type = 0
+  </select>
+
     <update id="updateLastTime" parameterType="com.reptile.entity.ArticleType">
     	UPDATE keyword SET last_time=#{iamgeBack}
 		where id = #{articleTypeId,jdbcType=INTEGER}

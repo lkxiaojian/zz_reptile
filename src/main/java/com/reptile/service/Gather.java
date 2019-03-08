@@ -226,8 +226,11 @@ public class Gather {
 						reptileEntity.setCreateTime( createTime);
 
 						reptileEntity.setContentType(contentType);
-
-						mapper.insert(reptileEntity);
+						Thread.sleep(ran.nextInt(2000));
+						try {
+							mapper.insert(reptileEntity);
+						} catch (Exception es) {
+						}
 					}
 //					log.info("插入信息"+articleType.getArticleTypeKeyword()+lis.size()+"条");
 				}

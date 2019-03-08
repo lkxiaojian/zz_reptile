@@ -20,6 +20,9 @@ public interface ArticleTypeMapper {
 
     List<ArticleType> selectByExample(ArticleTypeExample example);
 
+    List<ArticleType> selectAllKeyWork(@Param("rem") Integer rem);
+
+
     List<ArticleType> selectKeyWork(@Param("day") Integer day,@Param("threadNum") Integer threadNum,@Param("rem") Integer rem);
 
     int updateLastTime( ArticleType articleType);
