@@ -108,7 +108,7 @@ public class ParperServiceIml implements ParperService {
                             .replaceAll("]", "】").replaceAll("\\(", "（").replaceAll("\\)", "）").replaceAll("\\|", "|")
                             .replaceAll("-", "—").replaceAll(s1, "");
 
-                    maps.get(i).put("txt", s);
+                    maps.get(i).put("details_txt", s);
 
 //                    if(null!=code){
 //                        maps.get(i).put("details_txt", new String(s.getBytes(),code));
