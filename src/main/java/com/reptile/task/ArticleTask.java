@@ -4,14 +4,12 @@ import com.github.pagehelper.PageHelper;
 import com.reptile.dao.ArticleMapper;
 import com.reptile.dao.ArticleTypeMapper;
 import com.reptile.dao.ReptileDao;
-import com.reptile.entity.Article;
-import com.reptile.entity.ArticleExample;
-import com.reptile.entity.ArticleWithBLOBs;
-import com.reptile.entity.IpPostEntity;
+import com.reptile.entity.*;
 import com.reptile.service.Gather;
 import com.reptile.service.IReptile;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.mozilla.universalchardet.UniversalDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +21,12 @@ import org.springframework.stereotype.Component;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-@Component
-@EnableScheduling
+//@Component
+//@EnableScheduling
 public class ArticleTask {
 
 	private static final Logger log = LoggerFactory.getLogger(ArticleTask.class);
@@ -49,6 +48,8 @@ public class ArticleTask {
 	private ReptileDao mapper;
 	@Autowired
 	private ArticleTypeMapper articleTypeMapper;
+	@Autowired
+	private Gather gather;
 
 
 	@Scheduled(cron = "${TASK_TIME}")
@@ -58,7 +59,7 @@ public class ArticleTask {
 
 	@Scheduled(cron = "${TASK_TIME}")
 	public void job23() {
-		job2(3);
+		job2(9);
 	}
 
 	@Scheduled(cron = "${TASK_TIME}")
@@ -143,13 +144,18 @@ public class ArticleTask {
 					continue;
 				}else {
 					contentTxt = contentDiv.text();
-					contentTxt=new String(contentTxt.getBytes(),"UTF-8");
+//					contentTxt=new String(contentTxt.getBytes(),"UTF-8");
+					String code = guessEncoding(contentTxt.getBytes());
+					if(code != null){
+						contentTxt= new String( contentTxt.getBytes(code) ,"UTF-8");
+					}
+
 					String div = contentDiv.toString();
 					div = div.replace("data-src=", "src=");
 					div = div.substring(0,div.indexOf("<script nonce"));
 					div =div+"</div>";
 					record.setDetailsDiv(div.getBytes());
-					record.setDetailsTxt(contentTxt.getBytes("utf-8"));
+					record.setDetailsTxt(contentTxt.getBytes());
 					record.setCollectInitcount(contentTxt.length());
 					record.setState(1);
 				}
@@ -207,4 +213,39 @@ public class ArticleTask {
         SocketAddress address = new InetSocketAddress(server, servPort);
         socket.connect(address,3000);//1.判断ip、端口是否可连接
     }
+
+	public static String guessEncoding(byte[] bytes) {
+		UniversalDetector detector = new UniversalDetector(null);
+		detector.handleData(bytes, 0, bytes.length);
+		detector.dataEnd();
+		String encoding = detector.getDetectedCharset();
+		detector.reset();
+		return encoding;
+	}
+
+
+		@Scheduled(initialDelay=100,fixedDelay=1000*60*5)
+	public void job12(){
+		try {
+			ArticleTypeExample example = new ArticleTypeExample();
+			ArticleTypeExample.Criteria cl  = example.createCriteria();
+			cl.andParentidNotEqualTo(0);
+
+			List<ArticleType> listArticleType= new ArrayList<ArticleType>();
+			listArticleType = articleTypeMapper.selectAllKeyWork(0);
+
+			IpPostEntity ipPostEntity = new IpPostEntity();
+			ipPostEntity.setState(1);
+			List<IpPostEntity> ipPost = mapper.selectIpPost(ipPostEntity);
+
+			for (ArticleType articleType : listArticleType) {
+				gather.setData(1,articleType,ipPost);
+				log.info(articleType.getArticleTypeKeyword()+"插入结束");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

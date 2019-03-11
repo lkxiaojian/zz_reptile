@@ -7,6 +7,7 @@ import java.util.Random;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.mozilla.universalchardet.UniversalDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,15 +65,15 @@ public class SchedulerTask {
 		@Value("${INTERVAL_DAY}")
 		private Integer INTERVAL_DAY ;
 
-//	    @Scheduled(cron = "${TASK_TIME}")
-//	    public void job22() {
-//	    	job2(1);
-//	    }
-//
-//	    @Scheduled(cron = "${TASK_TIME}")
-//	    public void job23() {
-//	    	job2(3);
-//	    }
+	    @Scheduled(cron = "${TASK_TIME}")
+	    public void job22() {
+	    	job2(3);
+	    }
+
+	    @Scheduled(cron = "${TASK_TIME}")
+	    public void job23() {
+	    	job2(1);
+	    }
 
 //		@Scheduled(cron = "${TASK_TIME}")
 //		public void job24() {
@@ -134,6 +135,12 @@ public class SchedulerTask {
 					}
 					record = new ArticleWithBLOBs();
 					 contentDiv = document.getElementById("img-content");
+					try {
+						String code1 = document.select("meta[http-equiv=Content-Type]").get(0).attr("content");
+						System.out.println(articleId+"获取头信息"+code1);
+					} catch (Exception e11) {
+					}
+
 					 if(contentDiv==null) {
 						 if(article.getGetState()==2){
 							 record.setState(3);
@@ -148,14 +155,17 @@ public class SchedulerTask {
 						 continue;
 					 }else {
 						 contentTxt = contentDiv.text();
-						 contentTxt=new String(contentTxt.getBytes(),"UTF-8");
-
-						 String div = contentDiv.toString();
+						 String code = guessEncoding(contentTxt.getBytes());
+						if(code != null){
+							contentTxt= new String( contentTxt.getBytes(code) ,"UTF-8");
+						}
+						 System.out.println(contentTxt);
+						String div = contentDiv.toString();
 						 div = div.replace("data-src=", "src=");
 						 div = div.substring(0,div.indexOf("<script nonce"));
 						 div =div+"</div>";
 						 record.setDetailsDiv(div.getBytes());
-						 record.setDetailsTxt(contentTxt.getBytes("utf-8"));
+						 record.setDetailsTxt(contentTxt.getBytes());
 						 record.setCollectInitcount(contentTxt.length());
 						 record.setState(1);
 					 }
@@ -246,6 +256,16 @@ public class SchedulerTask {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+
+	public static String guessEncoding(byte[] bytes) {
+		UniversalDetector detector = new UniversalDetector(null);
+		detector.handleData(bytes, 0, bytes.length);
+		detector.dataEnd();
+		String encoding = detector.getDetectedCharset();
+		detector.reset();
+		return encoding;
 	}
 
 }
