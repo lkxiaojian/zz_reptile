@@ -4,6 +4,7 @@ import com.reptile.dao.AcademicPaperMapper;
 import com.reptile.dao.Article1Mapper;
 import com.reptile.entity.Article1;
 import com.reptile.service.ParperService;
+import org.mozilla.universalchardet.UniversalDetector;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -91,14 +92,25 @@ public class ParperServiceIml implements ParperService {
             byte[] details_divbytes = (byte[]) details_div;
             if (details_div != null && article_title != null) {
                 try {
-                    String s = new String(details_divbytes, "UTF-8").replaceAll(" ", "").replaceAll("\\s", "").replaceAll(",", "，").replaceAll("!", "！").replaceAll("\\.", "。").replaceAll("\\[", "】")
+
+                    String   code = guessEncoding(details_divbytes);
+
+                   String  s = new String(details_divbytes, "UTF-8").replaceAll(" ", "").replaceAll("\\s", "").replaceAll(",", "，").replaceAll("!", "！").replaceAll("\\.", "。").replaceAll("\\[", "】")
                             .replaceAll("]", "】").replaceAll("\\(", "（").replaceAll("\\)", "）").replaceAll("\\|", "|")
                             .replaceAll("-", "—");
                     String s1 = article_title.toString().replaceAll(",", "，").replaceAll("!", "！").replaceAll("\\.", "。").replaceAll("\\[", "】")
                             .replaceAll("]", "】").replaceAll("\\(", "（").replaceAll("\\)", "）").replaceAll("\\|", "|")
                             .replaceAll("-", "—").replaceAll(" ", "").replaceAll("\\s", "");
                     s = s.replaceAll(s1, "");
-                    maps.get(i).put("details_txt", s);
+
+
+                    if(null!=code){
+                        maps.get(i).put("details_txt", new String(s.getBytes(),code));
+                    }else{
+                        maps.get(i).put("details_txt",s);
+                    }
+
+
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -113,5 +125,16 @@ public class ParperServiceIml implements ParperService {
 
         return map;
     }
+
+
+    public  String guessEncoding(byte[] bytes) {
+        UniversalDetector detector = new UniversalDetector(null);
+        detector.handleData(bytes, 0, bytes.length);
+        detector.dataEnd();
+        String encoding = detector.getDetectedCharset();
+        detector.reset();
+        return encoding;
+    }
+
 
 }
