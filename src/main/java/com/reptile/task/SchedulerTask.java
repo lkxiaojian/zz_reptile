@@ -135,11 +135,6 @@ public class SchedulerTask {
 					}
 					record = new ArticleWithBLOBs();
 					 contentDiv = document.getElementById("img-content");
-					try {
-						String code1 = document.select("meta[http-equiv=Content-Type]").get(0).attr("content");
-						System.out.println(articleId+"获取头信息"+code1);
-					} catch (Exception e11) {
-					}
 
 					 if(contentDiv==null) {
 						 if(article.getGetState()==2){
@@ -155,11 +150,11 @@ public class SchedulerTask {
 						 continue;
 					 }else {
 						 contentTxt = contentDiv.text();
-						 String code = guessEncoding(contentTxt.getBytes());
-						if(code != null){
-							contentTxt= new String( contentTxt.getBytes(code) ,"UTF-8");
-						}
-						 System.out.println(contentTxt);
+//						 String code = guessEncoding(contentTxt.getBytes());
+						 String code1 = document.select("meta[http-equiv=Content-Type]").get(0).attr("content");
+						code1 = code1.substring(code1.indexOf("charset=")+8);
+						 contentTxt= new String(contentTxt.getBytes(code1) ,"UTF-8");
+						 log.info("{}:{}--{}",articleId,code1,contentTxt);
 						String div = contentDiv.toString();
 						 div = div.replace("data-src=", "src=");
 						 div = div.substring(0,div.indexOf("<script nonce"));

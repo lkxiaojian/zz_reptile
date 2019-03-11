@@ -95,20 +95,26 @@ public class ParperServiceIml implements ParperService {
 
                     String   code = guessEncoding(details_divbytes);
 
-                   String  s = new String(details_divbytes, "UTF-8").replaceAll(" ", "").replaceAll("\\s", "").replaceAll(",", "，").replaceAll("!", "！").replaceAll("\\.", "。").replaceAll("\\[", "】")
-                            .replaceAll("]", "】").replaceAll("\\(", "（").replaceAll("\\)", "）").replaceAll("\\|", "|")
-                            .replaceAll("-", "—");
+                    String s = "";
+                    if(null!=code){
+                        s = new String(details_divbytes,code);
+                    }else{
+                        s= new String(details_divbytes);
+                    }
+                    maps.get(i).put("txt", s);
                     String s1 = article_title.toString().replaceAll(",", "，").replaceAll("!", "！").replaceAll("\\.", "。").replaceAll("\\[", "】")
                             .replaceAll("]", "】").replaceAll("\\(", "（").replaceAll("\\)", "）").replaceAll("\\|", "|")
                             .replaceAll("-", "—").replaceAll(" ", "").replaceAll("\\s", "");
-                    s = s.replaceAll(s1, "");
+                    s = s.replaceAll(" ", "").replaceAll("\\s", "").replaceAll(",", "，").replaceAll("!", "！").replaceAll("\\.", "。").replaceAll("\\[", "】")
+                            .replaceAll("]", "】").replaceAll("\\(", "（").replaceAll("\\)", "）").replaceAll("\\|", "|")
+                            .replaceAll("-", "—").replaceAll(s1, "");
 
 
-                    if(null!=code){
-                        maps.get(i).put("details_txt", new String(s.getBytes(),code));
-                    }else{
-                        maps.get(i).put("details_txt",s);
-                    }
+//                    if(null!=code){
+//                        maps.get(i).put("details_txt", new String(s.getBytes(),code));
+//                    }else{
+//                        maps.get(i).put("details_txt",s);
+//                    }
 
 
                 } catch (UnsupportedEncodingException e) {

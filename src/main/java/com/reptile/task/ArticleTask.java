@@ -145,10 +145,15 @@ public class ArticleTask {
 				}else {
 					contentTxt = contentDiv.text();
 //					contentTxt=new String(contentTxt.getBytes(),"UTF-8");
-					String code = guessEncoding(contentTxt.getBytes());
-					if(code != null){
-						contentTxt= new String( contentTxt.getBytes(code) ,"UTF-8");
-					}
+					String code1 = document.select("meta[http-equiv=Content-Type]").get(0).attr("content");
+					code1 = code1.substring(code1.indexOf("charset=")+8);
+					contentTxt= new String(contentTxt.getBytes(code1) ,"UTF-8");
+					log.info("{}:{}--{}",articleId,code1,contentTxt);
+
+//					String code = guessEncoding(contentTxt.getBytes());
+//					if(code != null){
+//						contentTxt= new String( contentTxt.getBytes(code) ,"UTF-8");
+//					}
 
 					String div = contentDiv.toString();
 					div = div.replace("data-src=", "src=");
