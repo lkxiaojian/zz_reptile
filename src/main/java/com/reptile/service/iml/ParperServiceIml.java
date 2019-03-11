@@ -101,7 +101,6 @@ public class ParperServiceIml implements ParperService {
                     }else{
                         s= new String(details_divbytes);
                     }
-                    maps.get(i).put("txt", s);
                     String s1 = article_title.toString().replaceAll(",", "，").replaceAll("!", "！").replaceAll("\\.", "。").replaceAll("\\[", "】")
                             .replaceAll("]", "】").replaceAll("\\(", "（").replaceAll("\\)", "）").replaceAll("\\|", "|")
                             .replaceAll("-", "—").replaceAll(" ", "").replaceAll("\\s", "");
@@ -109,6 +108,7 @@ public class ParperServiceIml implements ParperService {
                             .replaceAll("]", "】").replaceAll("\\(", "（").replaceAll("\\)", "）").replaceAll("\\|", "|")
                             .replaceAll("-", "—").replaceAll(s1, "");
 
+                    maps.get(i).put("txt", s);
 
 //                    if(null!=code){
 //                        maps.get(i).put("details_txt", new String(s.getBytes(),code));
