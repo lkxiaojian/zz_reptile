@@ -51,7 +51,7 @@ public class ArithmeticArticleTask {
     private HttpUpload upFile = new HttpUpload();
 
 
-//        @Scheduled(cron = "0/30 * * * * ?")
+    //        @Scheduled(cron = "0/30 * * * * ?")
     public void ArithmeticArticle() {
         int page = Integer.parseInt(rasterProperties.getPropValue("1"));
         Map<String, Object> paremMap = new HashMap<>();
@@ -151,40 +151,42 @@ public class ArithmeticArticleTask {
             if (sendTypePost.isEmpty()) {
                 break;
             }
-//            ArticleTmp article_tmp = JSON.parseObject(sendTypePost, ArticleTmp.class);
 
-            String pdf_path = "D:/File/" + maps.get(i).get("pdf_path");
-            pdf_path = "E:/Users/lk/springboot/zz_reptiles/reptiles/pom.xml";
+            if (maps.get(i).get("pdf_path") == null) {
+                break;
+            }
+//
+
+            String pdf_path = "D:/File/" + maps.get(i).get("pdf_path").toString();
+//            pdf_path = "E:/Users/study/java框架/Android面试题汇总整理/2018Android面试 常见58题.docx";
 
             Map<String, Object> map = maps.get(i);
-// article_title,article_id ,article_keyword,author,create_time,source,content_excerpt,
-// image_path,posting_name,article_title_e,content_excerpt_e,
-// pdf_path,article_keyword_e,author_e,reference,site_number,seach_keyword,publication_date
             File outFile = new File(pdf_path);
             boolean exists = outFile.exists();
+            System.out.print("文件是否存在" + exists);
             Map<String, String> param = new HashMap<String, String>();
             param.put("FILE_PATH", outFile.getAbsolutePath());
             param.put("FILE_NAME", outFile.getName());
             param.put("article_title", map.get("article_title").toString());
             param.put("article_id", map.get("article_id").toString());
             param.put("article_keyword", map.get("article_keyword").toString());
-            param.put("author", map.get("author")==null? "": map.get("author").toString());
-            param.put("create_time", map.get("create_time")==null? "": map.get("create_time").toString());
-            param.put("source", map.get("source")==null? "": map.get("source").toString());
-            param.put("content_excerpt", map.get("content_excerpt")==null? "": map.get("content_excerpt").toString());
-            param.put("image_path", map.get("image_path")==null? "": map.get("image_path").toString());
-            param.put("posting_name", map.get("posting_name")==null? "": map.get("posting_name").toString());
-            param.put("article_title_e", map.get("article_title_e")==null? "": map.get("article_title_e").toString());
-            param.put("content_excerpt_e", map.get("content_excerpt_e")==null? "": map.get("content_excerpt_e").toString());
-            param.put("article_keyword_e", map.get("article_keyword_e")==null? "": map.get("article_keyword_e").toString());
-            param.put("author_e", map.get("author_e")==null? "": map.get("author_e").toString());
-            param.put("reference", map.get("reference")==null? "": map.get("reference").toString());
-            param.put("site_number", map.get("site_number")==null? "": map.get("site_number").toString());
-            param.put("seach_keyword", map.get("seach_keyword")==null? "": map.get("seach_keyword").toString());
-            param.put("publication_date", map.get("publication_date")==null? "": map.get("publication_date").toString());
+            param.put("author", map.get("author") == null ? "" : map.get("author").toString());
+            param.put("create_time", map.get("create_time") == null ? "" : map.get("create_time").toString());
+            param.put("source", map.get("source") == null ? "" : map.get("source").toString());
+            param.put("content_excerpt", map.get("content_excerpt") == null ? "" : map.get("content_excerpt").toString());
+            param.put("image_path", map.get("image_path") == null ? "" : map.get("image_path").toString());
+            param.put("posting_name", map.get("posting_name") == null ? "" : map.get("posting_name").toString());
+            param.put("article_title_e", map.get("article_title_e") == null ? "" : map.get("article_title_e").toString());
+            param.put("content_excerpt_e", map.get("content_excerpt_e") == null ? "" : map.get("content_excerpt_e").toString());
+            param.put("article_keyword_e", map.get("article_keyword_e") == null ? "" : map.get("article_keyword_e").toString());
+            param.put("author_e", map.get("author_e") == null ? "" : map.get("author_e").toString());
+            param.put("reference", map.get("reference") == null ? "" : map.get("reference").toString());
+            param.put("site_number", map.get("site_number") == null ? "" : map.get("site_number").toString());
+            param.put("seach_keyword", map.get("seach_keyword") == null ? "" : map.get("seach_keyword").toString());
+            param.put("publication_date", map.get("publication_date") == null ? "" : map.get("publication_date").toString());
 
 
-            param.put("json",sendTypePost);
+            param.put("json", sendTypePost);
             String uplaod = upFile.uplaod(postPath + "weatherData/fileUpload", param);
 
             rasterProperties.setProp("2", (page + 1) + "");

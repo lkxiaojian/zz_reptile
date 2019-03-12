@@ -24,11 +24,11 @@ public class ParperServiceIml implements ParperService {
 
     @Override
     public Map<String, Object> getData(int rows, int page, String type) throws Exception {
-        if ("1".equals(type)) {
-            type = "机器人";
-        } else if ("2".equals(type)) {
-            type = "机械工程学报";
-        }
+//        if ("1".equals(type)) {
+//            type = "机器人";
+//        } else if ("2".equals(type)) {
+//            type = "机械工程学报";
+//        }
         Map<String, Object> map = new HashMap<>();
         map.put("rows", rows);
         map.put("page", page * rows);
@@ -101,22 +101,14 @@ public class ParperServiceIml implements ParperService {
                     }else{
                         s= new String(details_divbytes);
                     }
-                    String s1 = article_title.toString().replaceAll(",", "，").replaceAll("!", "！").replaceAll("\\.", "。").replaceAll("\\[", "】")
-                            .replaceAll("]", "】").replaceAll("\\(", "（").replaceAll("\\)", "）").replaceAll("\\|", "|")
-                            .replaceAll("-", "—").replaceAll(" ", "").replaceAll("\\s", "");
-                    s = s.replaceAll(" ", "").replaceAll("\\s", "").replaceAll(",", "，").replaceAll("!", "！").replaceAll("\\.", "。").replaceAll("\\[", "】")
-                            .replaceAll("]", "】").replaceAll("\\(", "（").replaceAll("\\)", "）").replaceAll("\\|", "|")
-                            .replaceAll("-", "—").replaceAll(s1, "");
+//                    String s1 = article_title.toString().replaceAll(",", "，").replaceAll("!", "！").replaceAll("\\.", "。").replaceAll("\\[", "】")
+//                            .replaceAll("]", "】").replaceAll("\\(", "（").replaceAll("\\)", "）").replaceAll("\\|", "|")
+//                            .replaceAll("-", "—").replaceAll(" ", "").replaceAll("\\s", "");
+//                    s = s.replaceAll(" ", "").replaceAll("\\s", "").replaceAll(",", "，").replaceAll("!", "！").replaceAll("\\.", "。").replaceAll("\\[", "】")
+//                            .replaceAll("]", "】").replaceAll("\\(", "（").replaceAll("\\)", "）").replaceAll("\\|", "|")
+//                            .replaceAll("-", "—").replaceAll(s1, "");
 
                     maps.get(i).put("details_txt", s);
-
-//                    if(null!=code){
-//                        maps.get(i).put("details_txt", new String(s.getBytes(),code));
-//                    }else{
-//                        maps.get(i).put("details_txt",s);
-//                    }
-
-
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }

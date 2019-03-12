@@ -109,9 +109,10 @@ public class HttpUpload {
 
             DataOutputStream outStream = new DataOutputStream(conn.getOutputStream());
             outStream.write(sb.toString().getBytes(CHARSET));
-
+            File outFile = new File(filePath);
+            boolean exists = outFile.exists();
             // 构建发送字符串数据
-            if (StringUtils.isNotEmpty(filePath)) {
+            if (StringUtils.isNotEmpty(filePath)&&exists) {
                 String fileName = params.get("FILE_NAME");
                 StringBuilder sb1 = new StringBuilder();
                 sb1.append(PREFFIX);

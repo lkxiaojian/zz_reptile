@@ -55,7 +55,7 @@
 
     <select id="getData" parameterType="java.util.Map" resultType="java.util.Map">
     select article_id, pdf_path,article_title,update_time,content_excerpt_e,content_excerpt
-    from academic_paper where article_title!='' AND  content_excerpt !='' ORDER BY update_time ASC LIMIT #{page},#{rows}
+    from academic_paper  ORDER BY update_time ASC LIMIT #{page},#{rows}
   </select>
 
 
