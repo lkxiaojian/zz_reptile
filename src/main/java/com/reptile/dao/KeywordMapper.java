@@ -16,4 +16,6 @@ public interface KeywordMapper {
     int delKeyword(String id);
 
     int updateDelKeyword(Keyword record);
+
+    List<Keyword> getIdByParentId(String typeId);
 }

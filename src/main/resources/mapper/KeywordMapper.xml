@@ -54,4 +54,12 @@
         set del_type = #{del_type}
         where id = #{id}
     </update>
+
+
+    <select id="getIdByParentId"  parameterType="java.lang.String" resultMap="BaseResultMap">
+        select id
+        from keyword WHERE parent_id=#{typeId}
+    </select>
+
+
 </mapper>

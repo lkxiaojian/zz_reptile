@@ -2,7 +2,9 @@ package com.reptile.service.iml;
 
 import com.reptile.dao.AcademicPaperMapper;
 import com.reptile.dao.Article1Mapper;
+import com.reptile.dao.KeywordMapper;
 import com.reptile.entity.Article1;
+import com.reptile.entity.Keyword;
 import com.reptile.service.ParperService;
 import org.mozilla.universalchardet.UniversalDetector;
 import org.springframework.stereotype.Service;
@@ -18,9 +20,11 @@ public class ParperServiceIml implements ParperService {
 
     @Resource
     private AcademicPaperMapper academicPaperMapper;
-
     @Resource
     private Article1Mapper article1Mapper;
+
+    @Resource
+    private KeywordMapper keywordMapper;
 
     @Override
     public Map<String, Object> getData(int rows, int page, String type) throws Exception {
@@ -75,11 +79,11 @@ public class ParperServiceIml implements ParperService {
         String sql = "";
         String[] typeList = type.split(",");
 
-        for (int i=0;i<typeList.length;i++){
-            if(i==0){
-                sql=sql+" and article_title like '%"+typeList[i]+"%' ";
-            }else {
-                sql=sql+" or article_title like '%"+typeList[i]+"%' ";
+        for (int i = 0; i < typeList.length; i++) {
+            if (i == 0) {
+                sql = sql + " and article_title like '%" + typeList[i] + "%' ";
+            } else {
+                sql = sql + " or article_title like '%" + typeList[i] + "%' ";
             }
         }
         paremMap.put("sql", sql);
@@ -93,20 +97,68 @@ public class ParperServiceIml implements ParperService {
             if (details_div != null && article_title != null) {
                 try {
 
-                    String   code = guessEncoding(details_divbytes);
+                    String code = guessEncoding(details_divbytes);
 
                     String s = "";
-                    if(null!=code){
-                        s = new String(details_divbytes,code);
-                    }else{
-                        s= new String(details_divbytes);
+                    if (null != code) {
+                        s = new String(details_divbytes, code);
+                    } else {
+                        s = new String(details_divbytes);
                     }
-//                    String s1 = article_title.toString().replaceAll(",", "，").replaceAll("!", "！").replaceAll("\\.", "。").replaceAll("\\[", "】")
-//                            .replaceAll("]", "】").replaceAll("\\(", "（").replaceAll("\\)", "）").replaceAll("\\|", "|")
-//                            .replaceAll("-", "—").replaceAll(" ", "").replaceAll("\\s", "");
-//                    s = s.replaceAll(" ", "").replaceAll("\\s", "").replaceAll(",", "，").replaceAll("!", "！").replaceAll("\\.", "。").replaceAll("\\[", "】")
-//                            .replaceAll("]", "】").replaceAll("\\(", "（").replaceAll("\\)", "）").replaceAll("\\|", "|")
-//                            .replaceAll("-", "—").replaceAll(s1, "");
+
+                    maps.get(i).put("details_txt", s);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("count", wxDataCount - page * rows);
+        resultMap.put("txt", maps);
+        map.put("code", 0);
+        map.put("result", resultMap);
+
+        return map;
+    }
+
+    @Override
+    public Map getWxDataById(int rows, int page, String typeId) throws Exception {
+
+        Map<String, Object> paremMap = new HashMap<>();
+        paremMap.put("rows", rows);
+        paremMap.put("page", page * rows);
+
+        List<Keyword> idByParentId = keywordMapper.getIdByParentId(typeId);
+        String type = "";
+
+        for (int i = 0; i < idByParentId.size(); i++) {
+            type = type + "'" + idByParentId.get(i).getId() + "',";
+        }
+        if (type.length() > 1) {
+            type = type.substring(0, type.length() - 1);
+        }
+        String sql = " and article_type_id in (" + type + ")";
+        paremMap.put("sql", sql);
+
+        int wxDataCount = article1Mapper.getWxDataCount(paremMap);
+        List<Map<String, Object>> maps = article1Mapper.getWxData(paremMap);
+        for (int i = 0; i < maps.size(); i++) {
+            Object details_div = maps.get(i).get("details_txt");
+            Object article_title = maps.get(i).get("article_title");
+
+            byte[] details_divbytes = (byte[]) details_div;
+            if (details_div != null && article_title != null) {
+                try {
+
+                    String code = guessEncoding(details_divbytes);
+
+                    String s = "";
+                    if (null != code) {
+                        s = new String(details_divbytes, code);
+                    } else {
+                        s = new String(details_divbytes);
+                    }
 
                     maps.get(i).put("details_txt", s);
                 } catch (UnsupportedEncodingException e) {
@@ -125,7 +177,7 @@ public class ParperServiceIml implements ParperService {
     }
 
 
-    public  String guessEncoding(byte[] bytes) {
+    public String guessEncoding(byte[] bytes) {
         UniversalDetector detector = new UniversalDetector(null);
         detector.handleData(bytes, 0, bytes.length);
         detector.dataEnd();

@@ -51,7 +51,7 @@ public class ArithmeticArticleTask {
     private HttpUpload upFile = new HttpUpload();
 
 
-    //        @Scheduled(cron = "0/30 * * * * ?")
+// @Scheduled(cron = "0/30 * * * * ?")
     public void ArithmeticArticle() {
         int page = Integer.parseInt(rasterProperties.getPropValue("1"));
         Map<String, Object> paremMap = new HashMap<>();

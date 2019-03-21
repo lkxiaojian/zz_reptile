@@ -65,4 +65,28 @@ public class ParperController {
 
 		return map;
 	}
+
+
+	/**
+	 * 获取微信文章
+	 * @param rows
+	 * @param page
+	 * @param typeId
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/getWxDataById")
+	public Map getWxDataById(int rows, int page, String typeId) throws Exception{
+
+
+		Map map = new HashMap();
+		try {
+			map=parperServiceIml.getWxDataById(rows,page,typeId);
+		} catch (Exception e) {
+			map.put("msg", "系统程序出错，请联系管理员！");
+			map.put("code",500);
+		}
+
+		return map;
+	}
 }
