@@ -24,8 +24,8 @@ import java.util.Random;
  * Description: zz_reptile
  * Created by s on 2019/2/27 21:45
  */
-@Component
-@EnableScheduling
+//@Component
+//@EnableScheduling
 public class ArticleAgainTask {
 
     private static final Logger log = LoggerFactory.getLogger(ArticleAgainTask.class);

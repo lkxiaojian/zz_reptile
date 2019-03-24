@@ -32,8 +32,8 @@ import com.reptile.entity.IpPostEntity;
 import com.reptile.service.Gather;
 import com.reptile.service.IReptile;
 
-@Component
-@EnableScheduling
+//@Component
+//@EnableScheduling
 //@EnableAsync
 public class SchedulerTask {
 	private static final Logger log = LoggerFactory.getLogger(SchedulerTask.class);

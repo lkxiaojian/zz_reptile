@@ -52,20 +52,20 @@ public class ArticleTask {
 	private Gather gather;
 
 
-	@Scheduled(cron = "${TASK_TIME}")
-	public void job22() {
-		job2(1);
-	}
-
-	@Scheduled(cron = "${TASK_TIME}")
-	public void job23() {
-		job2(9);
-	}
-
-	@Scheduled(cron = "${TASK_TIME}")
-	public void job24() {
-		job2(5);
-	}
+//	@Scheduled(cron = "${TASK_TIME}")
+//	public void job22() {
+//		job2(1);
+//	}
+//
+//	@Scheduled(cron = "${TASK_TIME}")
+//	public void job23() {
+//		job2(9);
+//	}
+//
+//	@Scheduled(cron = "${TASK_TIME}")
+//	public void job24() {
+//		job2(5);
+//	}
 
 //	@Scheduled(cron = "0 0/5 * * * ?")
 //	public void job25() {
@@ -186,39 +186,6 @@ public class ArticleTask {
 	}
 
 
-//	@Scheduled(initialDelay = 3000)
-//	 @Scheduled(cron = "0 0 4 * * ?")
-	@Scheduled(cron = "${setIpPost}")
-    public void job3(){
-		 IpPostEntity ipPostEntity = new IpPostEntity();
-		List<IpPostEntity> l = mapper.selectIpPost(ipPostEntity);
-		for (IpPostEntity i : l) {
-			try {
-				connect(i.getIp(),i.getPost());
-				i.setState(1);
-				mapper.insertsIpPost(i);
-			} catch (Exception e) {
-				i.setState(0);
-				mapper.insertsIpPost(i);
-			}
-		}
-
-		ipPostEntity.setState(1);
-		l = mapper.selectIpPost(ipPostEntity);
-
-		log.info("刷新IP成功，当前IP数量："+l.size());
-
-   }
-
-
-	public void connect(String server, int servPort) throws Exception {
-        Socket socket = new Socket();
-        socket.setReceiveBufferSize(servPort);
-        socket.setSoTimeout(3000);
-        SocketAddress address = new InetSocketAddress(server, servPort);
-        socket.connect(address,3000);//1.判断ip、端口是否可连接
-    }
-
 	public static String guessEncoding(byte[] bytes) {
 		UniversalDetector detector = new UniversalDetector(null);
 		detector.handleData(bytes, 0, bytes.length);
@@ -229,7 +196,7 @@ public class ArticleTask {
 	}
 
 
-		@Scheduled(initialDelay=100,fixedDelay=1000*60*5)
+//		@Scheduled(initialDelay=100,fixedDelay=1000*60*5)
 	public void job12(){
 		try {
 			ArticleTypeExample example = new ArticleTypeExample();
