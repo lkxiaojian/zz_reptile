@@ -34,7 +34,7 @@ public class GetIpTask {
     private ReptileDao mapper;
 
 
-    @Scheduled(cron = "0 0 0 0 0 1 ")
+    @Scheduled(cron = "0 0 0 1/7 * ?")
     public void getIp()  {
 
         try {
@@ -87,17 +87,22 @@ public class GetIpTask {
 
 
     @Scheduled(cron = "${setIpPost}")
+//    @Scheduled(initialDelay=100,fixedDelay=1000*60*5)
     public void job3(){
         IpPostEntity ipPostEntity = new IpPostEntity();
         List<IpPostEntity> l = mapper.selectIpPost(ipPostEntity);
+        System.out.println(l.size());
         for (IpPostEntity i : l) {
             try {
                 connect(i.getIp(),i.getPost());
                 i.setState(1);
                 mapper.insertsIpPost(i);
+                System.out.println("成功==="+i.getIp()+":"+i.getPost());
             } catch (Exception e) {
                 i.setState(0);
                 mapper.insertsIpPost(i);
+                System.out.println("失败==="+i.getIp()+":"+i.getPost());
+
             }
         }
 
