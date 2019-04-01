@@ -1,6 +1,10 @@
 package com.reptile.entity;
 
 public class ArticleWithBLOBs extends Article {
+
+    private String txt ;
+    private int num;
+
     private byte[] contentCrawl;
 
     private byte[] detailsTxt;
@@ -29,5 +33,21 @@ public class ArticleWithBLOBs extends Article {
 
     public void setDetailsDiv(byte[] detailsDiv) {
         this.detailsDiv = detailsDiv;
+    }
+
+    public String getTxt() {
+        return txt;
+    }
+
+    public void setTxt(String txt) {
+        this.txt = txt;
+    }
+
+    public int getNum() {
+        return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
     }
 }

@@ -7,6 +7,7 @@ import com.reptile.entity.ArticleWithBLOBs;
 import java.util.List;
 import java.util.Map;
 
+import com.reptile.entity.ReptileEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,6 +21,9 @@ public interface ArticleMapper {
 
     List<ArticleWithBLOBs> selectaData(ArticleExample example);
     List<ArticleWithBLOBs> selectArticleData(ArticleExample example);
+
+    List<ArticleWithBLOBs> selArticleData(ReptileEntity record);
+
 
     List<Article> selectByExample(ArticleExample example);
 

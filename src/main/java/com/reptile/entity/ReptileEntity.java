@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 public class ReptileEntity implements Serializable{
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	@NotNull(message = "用户IssD不能为空")
@@ -29,6 +29,9 @@ public class ReptileEntity implements Serializable{
 	private byte[] detailsDiv;
 	private String detailsPath;
 
+	private String stateTime ;
+	private String endTime;
+
 	public String getArticleId() {
 		return articleId;
 	}
@@ -47,10 +50,24 @@ public class ReptileEntity implements Serializable{
 	public void setAuthor(String author) {
 		this.author = author;
 	}
-	
-	
 
-	
+
+	public String getStateTime() {
+		return stateTime;
+	}
+
+	public void setStateTime(String stateTime) {
+		this.stateTime = stateTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
 	public String getDetailsPath() {
 		return detailsPath;
 	}
@@ -118,7 +135,7 @@ public class ReptileEntity implements Serializable{
 		this.detailsDiv = detailsDiv;
 	}
 
-	
-	
-	
+
+
+
 }
