@@ -17,4 +17,5 @@ public interface Article1Mapper {
     List<Map<String, Object>> getWxData(Map<String, Object> paremMap);
 
     List<Map<String, Object>> ArithmeticArticle(Map<String, Object> paremMap);
+    List<Map<String, Object>> ArithmeticArticle1(Map<String, Object> paramMap);
 }

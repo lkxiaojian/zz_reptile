@@ -27,6 +27,15 @@ public class ArticleTmp {
         private List<String> article_keywords;
         private List<String> type_id;
         private List<String> type_name;
+        private String simhash;
+
+        public String getSimhash() {
+            return simhash;
+        }
+
+        public void setSimhash(String simhash) {
+            this.simhash = simhash;
+        }
 
         public String getArticle_id() {
             return article_id;

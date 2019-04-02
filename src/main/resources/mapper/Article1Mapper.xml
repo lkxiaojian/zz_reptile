@@ -72,9 +72,22 @@
     </select>
 
 
-    <select id="ArithmeticArticle" parameterType="java.util.Map" resultType="java.util.Map">
+ <!--   <select id="ArithmeticArticle" parameterType="java.util.Map" resultType="java.util.Map">
     select  article_id,details_txt ,article_title,details_div,create_time,author,source   from chat.article1 where 1=1
     ORDER BY update_time ASC LIMIT #{page},#{rows}
-  </select>
+  </select>-->
+
+
+
+    <select id="ArithmeticArticle" parameterType="java.util.Map" resultType="java.util.Map">
+        select  article_id from chat.article1 where state=1
+
+        ORDER BY update_time ASC LIMIT #{page},#{rows}
+    </select>
+
+    <select id="ArithmeticArticle1" parameterType="java.util.Map" resultType="java.util.Map">
+        select  article_id,details_txt ,article_title,details_div,create_time,author,source   from chat.article1 where state=1
+        ${sql}
+    </select>
 
 </mapper>

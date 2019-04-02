@@ -88,22 +88,23 @@ ArticleTask: 0 0 0/1 * * ?
 #定时更新ip
 setIpPost: 0 0 5,9,16,23 * * ?
 #文章类型分类ip地址
+#articlePath: http://10.34.2.9:8889/
 articlePath: http://106.2.13.136:8889/
 
 #文章摘要ip地址
+#abstractPath: http://10.34.2.9:8080/
 abstractPath: http://106.2.13.136:8080/
 
 
 #文章推送到主服务器上
-#postPath: http://106.2.13.136:7903/
+#postPath: http://10.34.2.9:7903/
+postPath: http://106.2.11.94:7903/
 postPath: http://localhost:7903/
 
 
 #查询文章分类的页数
 rasterProp:
-  path: ..\zz_reptile\src\main\resources\filelist.properties
+  path: ..\reptile\src\main\resources\filelist.properties
    # path: D:\reptiles\filelist.properties
 
-#论文路径
-PARPER_PATH:
-  D:/File/
+

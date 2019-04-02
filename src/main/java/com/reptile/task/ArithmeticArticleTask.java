@@ -1,4 +1,169 @@
 package com.reptile.task;
+import com.alibaba.fastjson.JSON;
+
+import com.reptile.dao.Article1Mapper;
+import com.reptile.entity.AbstractTmp;
+import com.reptile.entity.ArticleTmp;
+import com.reptile.properties.RasterProperties;
+import com.reptile.utlils.HttpUtils;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+
+import org.mozilla.universalchardet.UniversalDetector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+@Component
+@EnableScheduling
+public class ArithmeticArticleTask {
+    private static final Logger log = LoggerFactory.getLogger(ArithmeticArticleTask.class);
+
+    @Resource
+    private Article1Mapper article1Mapper;
+
+    @Resource
+    private RasterProperties rasterProperties;
+
+
+    @Value("${articlePath}")
+    private String articlePath;
+
+    @Value("${abstractPath}")
+    private String abstractPath;
+
+    @Value("${postPath}")
+    private String postPath;
+    private int rows = 50;
+
+    @Scheduled(cron = "0/20 * * * * ?")
+    public void ArithmeticArticle() {
+        int page = Integer.parseInt(this.rasterProperties.getPropValue("1"));
+        Map paremMap = new HashMap();
+        paremMap.put("rows", Integer.valueOf(this.rows));
+        paremMap.put("page", Integer.valueOf(page * this.rows));
+        List mapsId = this.article1Mapper.ArithmeticArticle(paremMap);
+
+        String sql = " and article_id in(";
+        String idList = "";
+
+        for (int i = 0; i < mapsId.size(); i++) {
+            idList = idList + "'" + ((Map) mapsId.get(i)).get("article_id") + "',";
+        }
+        if (idList.length() > 0) {
+            idList = idList.substring(0, idList.length() - 1);
+        }
+        sql = sql + idList + ")";
+        paremMap.put("sql", sql);
+
+        List maps = this.article1Mapper.ArithmeticArticle1(paremMap);
+        List abstractMaps = new ArrayList();
+        List typeMaps = new ArrayList();
+        Map typeMap = null;
+        Map abstractMap = null;
+        try {
+            for (int i = 0; i < maps.size(); i++) {
+                abstractMaps = new ArrayList();
+                typeMaps = new ArrayList();
+                typeMap = new HashMap();
+                abstractMap = new HashMap();
+                byte[] details_divbytes = (byte[]) ((Map) maps.get(i)).get("details_txt");
+                if (details_divbytes != null) {
+                    typeMap.put("content", guessEncoding(details_divbytes));
+                    typeMap.put("article_id", ((Map) maps.get(i)).get("article_id"));
+                    typeMap.put("title", ((Map) maps.get(i)).get("article_title"));
+                    typeMaps.add(typeMap);
+
+                    abstractMap.put("doc", guessEncoding(details_divbytes));
+                    abstractMap.put("id", ((Map) maps.get(i)).get("article_id"));
+
+                    abstractMap.put("link", guessEncoding((byte[]) ((Map) maps.get(i)).get("details_div")));
+
+                    abstractMaps.add(abstractMap);
+
+                    String type = JSON.toJSONString(typeMaps);
+                    if (type.length() > 2) {
+                        type = "{ \"articles\": [" + type.substring(1, type.length() - 1) + "    ]}";
+                    }
+                    String sendTypePost = HttpUtils.doPost(this.articlePath + "wechat", type);
+                    if (sendTypePost.isEmpty()) {
+                        break;
+                    }
+                    ArticleTmp article_tmp = (ArticleTmp) JSON.parseObject(sendTypePost, ArticleTmp.class);
+                    String abstracts = JSON.toJSONString(abstractMaps);
+                    if (abstracts.isEmpty()) {
+                        break;
+                    }
+                    String sendAbstractsPost = HttpUtils.doPost(this.abstractPath + "abstract/", abstracts);
+                    if (sendAbstractsPost != null) {
+
+                        List abstractTmp;
+                        try {
+                            abstractTmp = JSON.parseArray(sendAbstractsPost, AbstractTmp.class);
+                        } catch (Exception e) {
+
+                            System.out.print("文章上传-####-->\n");
+                            continue;
+                        }
+
+                        if ((abstractTmp != null) && (abstractTmp.size() != 0)) {
+                            Map resultMap = new HashMap();
+                            resultMap.put("article_id", ((Map) maps.get(i)).get("article_id"));
+                            resultMap.put("article_keywords", ( article_tmp.getResult().get(0)).getArticle_keywords());
+                            resultMap.put("type_id", ( article_tmp.getResult().get(0)).getType_id());
+                            resultMap.put("type_name", ( article_tmp.getResult().get(0)).getType_name());
+                            resultMap.put("article_txt", guessEncoding(details_divbytes));
+                            resultMap.put("article_div", guessEncoding((byte[]) ((Map) maps.get(i)).get("details_div")));
+                            resultMap.put("article_title", ((Map) maps.get(i)).get("article_title"));
+                            resultMap.put("summary", ((AbstractTmp) abstractTmp.get(0)).getSummary());
+                            resultMap.put("create_time", ((Map) maps.get(i)).get("create_time").toString().substring(0, 19));
+                            resultMap.put("author", ((Map) maps.get(i)).get("author"));
+                            resultMap.put("source", ((Map) maps.get(i)).get("source"));
+                            resultMap.put("simhash", (article_tmp.getResult().get(0)).getSimhash());
+                            String s = HttpUtils.doPost(this.postPath + "algorithm/wxdata", JSON.toJSONString(resultMap));
+                            System.out.print("文章上传-####-->" + s + "\n  id----" + ((Map) maps.get(i)).get("article_id") + " \n ");
+                        }
+                    }
+                }
+            }
+            this.rasterProperties.setProp("1", page + 1 + "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.rasterProperties.setProp("1", page + 1 + "");
+        }
+    }
+
+    private String guessEncoding(byte[] bytes) {
+        UniversalDetector detector = new UniversalDetector(null);
+        detector.handleData(bytes, 0, bytes.length);
+        detector.dataEnd();
+        String encoding = detector.getDetectedCharset();
+        detector.reset();
+        if (null != encoding) {
+            try {
+                return new String(bytes, encoding);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        } else {
+            return new String(bytes);
+        }
+
+        return "";
+    }
+}
+
+
+
+/*
+package com.reptile.task;
 
 import com.alibaba.fastjson.JSON;
 import com.reptile.dao.AcademicPaperMapper;
@@ -86,12 +251,12 @@ public class ArithmeticArticleTask {
                 }
                 String sendTypePost = HttpUtils.doPost(articlePath + "wechat", type);
                 if (sendTypePost.isEmpty()) {
-                    break;
+                    continue;
                 }
                 ArticleTmp article_tmp = JSON.parseObject(sendTypePost, ArticleTmp.class);
                 String abstracts = JSON.toJSONString(abstractMaps);
                 if (abstracts.isEmpty()) {
-                    break;
+                    continue;
                 }
                 //摘要
                 String sendAbstractsPost = HttpUtils.doPost(abstractPath + "abstract/", abstracts);
@@ -113,9 +278,10 @@ public class ArithmeticArticleTask {
                 String s = HttpUtils.doPost(postPath + "algorithm/wxdata", JSON.toJSONString(resultMap));
 
 
-                rasterProperties.setProp("1", (page + 1) + "");
+
 
             }
+            rasterProperties.setProp("1", (page + 1) + "");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -163,7 +329,7 @@ public class ArithmeticArticleTask {
             Map<String, Object> map = maps.get(i);
             File outFile = new File(pdf_path);
             boolean exists = outFile.exists();
-            System.out.print("文件是否存在" + exists);
+            System.out.print("文件是否存在" + exists+"\n");
             Map<String, String> param = new HashMap<String, String>();
             param.put("FILE_PATH", outFile.getAbsolutePath());
             param.put("FILE_NAME", outFile.getName());
@@ -188,11 +354,12 @@ public class ArithmeticArticleTask {
 
             param.put("json", sendTypePost);
             String uplaod = upFile.uplaod(postPath + "weatherData/fileUpload", param);
+            System.out.print("文件是否上传成功" + uplaod+"\n");
 
-            rasterProperties.setProp("2", (page + 1) + "");
         }
-
+        rasterProperties.setProp("2", (page + 1) + "");
     }
 
 
 }
+*/
