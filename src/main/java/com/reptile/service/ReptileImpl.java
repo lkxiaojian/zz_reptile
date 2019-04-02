@@ -88,6 +88,32 @@ public class ReptileImpl implements IReptile{
 	public List<PaperWithBLOBs>  getPaperData(Paper paper) throws Exception {
 		PaperExample paperExample=  new PaperExample();
 		com.reptile.entity.PaperExample.Criteria criteria = paperExample.createCriteria();
+		Integer articleId = paper.getArticleId();
+		if(articleId!=null&& articleId !=0 ){
+			criteria.andArticleIdEqualTo(articleId);
+		}
+		String articleKeyword = paper.getArticleKeyword();
+		if(articleKeyword !=null && !"".equals(articleKeyword)){
+			criteria.andArticleKeywordLike(articleId+"%");
+		}
+		String articleTitle = paper.getArticleTitle();
+		if(articleTitle !=null && !"".equals(articleTitle)){
+			criteria.andArticleTitleLike(articleId+"%");
+		}
+		String source = paper.getSource();
+		if(source !=null && !"".equals(source)){
+			criteria.andSourceEqualTo(source);
+		}
+		String author = paper.getAuthor();
+		if(author !=null && !"".equals(author)){
+			criteria.andAuthorLike("%"+author+"%");
+		}
+
+		String stateTime = paper.getStateTIme();
+		String endTime =paper.getEndTime();
+		if(stateTime !=null && !"".equals(stateTime)&&endTime !=null && !"".equals(endTime)){
+			criteria.andCreateTimeBetween(stateTime,endTime);
+		}
 		List<PaperWithBLOBs>  l = paperMapper.selectByExampleWithBLOBs(paperExample);
 		return l;
 	}

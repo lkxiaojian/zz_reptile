@@ -97,9 +97,8 @@ public class ReptileController {
 		Map map = new HashMap();
 		try {
 			PageHelper.startPage(page, rows);
-			List<ArticleWithBLOBs> list = reptileImpl.getData(reptileEntity);
+			List<ArticleWithBLOBs> list = reptileImpl.getArticleData(reptileEntity);
 
-			List dataList = new ArrayList();
 			String code="";
 			for (ArticleWithBLOBs articleWithBLOBs : list) {
 				code = guessEncoding(articleWithBLOBs.getDetailsTxt());
@@ -116,7 +115,7 @@ public class ReptileController {
 			PageInfo pageInfo = new PageInfo(list);
 			map.put("count", pageInfo.getTotal());
 
-			map.put("data", dataList);
+			map.put("data", list);
 			map.put("msg", "数据返回成功！");
 			map.put("code",200);
 
@@ -155,22 +154,22 @@ public class ReptileController {
 
 			List dataList = new ArrayList();
 			String code="";
-			for (PaperWithBLOBs articleWithBLOBs : list) {
-				code = guessEncoding(articleWithBLOBs.getDetailsTxt());
-				if(null!=code){
-					String txt = new String(articleWithBLOBs.getDetailsTxt(),code);
-					articleWithBLOBs.setTxt(txt);
-					articleWithBLOBs.setNum(txt.length());
-				}else{
-					String txt = new String(articleWithBLOBs.getDetailsTxt());
-					articleWithBLOBs.setTxt(txt);
-					articleWithBLOBs.setNum(txt.length());
-				}
-			}
+//			for (PaperWithBLOBs articleWithBLOBs : list) {
+//				code = guessEncoding(articleWithBLOBs.get);
+//				if(null!=code){
+//					String txt = new String(articleWithBLOBs.getDetailsTxt(),code);
+//					articleWithBLOBs.setTxt(txt);
+//					articleWithBLOBs.setNum(txt.length());
+//				}else{
+//					String txt = new String(articleWithBLOBs.getDetailsTxt());
+//					articleWithBLOBs.setTxt(txt);
+//					articleWithBLOBs.setNum(txt.length());
+//				}
+//			}
 			PageInfo pageInfo = new PageInfo(list);
 			map.put("count", pageInfo.getTotal());
 
-			map.put("data", dataList);
+			map.put("data", list);
 			map.put("msg", "数据返回成功！");
 			map.put("code",200);
 

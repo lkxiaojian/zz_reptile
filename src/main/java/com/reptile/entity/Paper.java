@@ -3,6 +3,8 @@ package com.reptile.entity;
 import java.util.Date;
 
 public class Paper {
+    private String stateTIme;
+    private String endTime;
     private Integer articleId;
 
     private String articleTitle;
@@ -43,6 +45,22 @@ public class Paper {
 
     public Integer getArticleId() {
         return articleId;
+    }
+
+    public String getStateTIme() {
+        return stateTIme;
+    }
+
+    public void setStateTIme(String stateTIme) {
+        this.stateTIme = stateTIme;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
     public void setArticleId(Integer articleId) {
