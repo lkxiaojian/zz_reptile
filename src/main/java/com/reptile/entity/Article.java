@@ -15,7 +15,7 @@ public class Article {
 
     private Date updateTime;
 
-    private Date createTime;
+    private String createTime;
 
     private String source;
 
@@ -83,9 +83,6 @@ public class Article {
         this.updateTime = updateTime;
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
 
     public Integer getGetState() {
         return getState;
@@ -95,7 +92,11 @@ public class Article {
         this.getState = getState;
     }
 
-    public void setCreateTime(Date createTime) {
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 

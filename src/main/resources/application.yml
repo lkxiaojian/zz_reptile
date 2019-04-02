@@ -104,4 +104,6 @@ rasterProp:
   path: ..\zz_reptile\src\main\resources\filelist.properties
    # path: D:\reptiles\filelist.properties
 
-
+#论文路径
+PARPER_PATH:
+  D:/File/

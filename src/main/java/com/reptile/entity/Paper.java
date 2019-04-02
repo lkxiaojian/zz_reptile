@@ -13,7 +13,7 @@ public class Paper {
 
     private String author;
 
-    private Date updateTime;
+    private String updateTime;
 
     private String createTime;
 
@@ -91,11 +91,11 @@ public class Paper {
         this.author = author == null ? null : author.trim();
     }
 
-    public Date getUpdateTime() {
+    public String getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
     }
 
