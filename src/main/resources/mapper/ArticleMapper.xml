@@ -96,50 +96,59 @@
         </where>
     </sql>
 
+    <select id="selArticleData" parameterType="com.reptile.entity.ReptileEntity" resultMap="ResultMapWithBLOBs">
+        SELECT   a.article_id, a.article_type_id, a.article_title, a.article_keyword, a.author,
+        a.update_time,a.create_time, a.source, a.share_count, a.collect_count,
+        a.collect_initcount, a.share_initcount,a.content_type, a.content_manual, a.content_readcount,
+        a.content_excerpt, a.image_path, a.state, a.details_path,a.get_state ,
+        a.content_crawl, a.details_txt, a.details_div
+        FROM article1 a,keyword b
+
+        <where>
+            b.id = a.article_type_id
+            and  b.del_type =0
+            and a.state = 1
+            <if test="stateTime != null and stateTime != '' ">
+                and a.create_time &gt;= #{stateTime}
+            </if>
+            <if test="endTime != null and endTime != '' ">
+                and a.create_time &lt;= #{endTime}
+            </if>
+
+            <if test="articleId != null and articleId != '' ">
+                and a.article_id = #{articleId}
+            </if>
+            <if test="articleTypeId != null and articleTypeId != '' ">
+                and a.article_type_id = #{articleTypeId}
+            </if>
+            <if test="articleTitle != null and articleTitle != '' ">
+                and a.article_title like #{articleTitle}
+            </if>
+            <if test="articleKeyword != null and articleKeyword != '' ">
+                and a.article_keyword = #{articleKeyword}
+            </if>
+
+            <if test="source != null and source != '' ">
+                and a.source = #{source}
+            </if>
+            <if test="author != null and author != '' ">
+                and a.author = #{author}
+            </if>
+
+        </where>
+
+        ORDER BY a.create_time
+    </select>
     <sql id="Base_Column_List">
     article_id, article_type_id, article_title, article_keyword, author, update_time,
     create_time, source, share_count, collect_count, collect_initcount, share_initcount,
     content_type, content_manual, content_readcount, content_excerpt, image_path, state,
     details_path,get_state
   </sql>
+
     <sql id="Blob_Column_List">
     content_crawl, details_txt, details_div
   </sql>
-
-    <select id="selArticleData" parameterType="com.reptile.entity.ReptileEntity" resultMap="ResultMapWithBLOBs">
-    SELECT   a.article_id, a.article_type_id, a.article_title, a.article_keyword, a.author, a.update_time,
-    a.create_time, a.source, a.share_count, a.collect_count, a.collect_initcount, a.share_initcount,
-    a.content_type, a.content_manual, a.content_readcount, a.content_excerpt, a.image_path, a.state,
-    a.details_path,a.get_state FROM article1 a,keyword b
-    where b.id = a.article_keyword and  b.del_type =0 and a.state = 1
-        <if test="stateTime != null">
-            and a.create_time &gt;= #{stateTime}
-        </if>
-        <if test="endTime != null">
-            and a.create_time &lt;= #{endTime}
-        </if>
-
-        <if test="articleId != null">
-            and a.articleId = #{articleId}
-        </if>
-        <if test="articleTypeId != null">
-            and a.article_type_id = #{articleTypeId}
-        </if>
-        <if test="articleTitle != null">
-            and a.article_title like #{articleTitle}
-        </if>
-        <if test="articleKeyword != null">
-            and a.article_keyword = #{articleKeyword}
-        </if>
-
-        <if test="source != null">
-            and a.source = #{source}
-        </if>
-        <if test="author != null">
-            and a.author = #{author}
-        </if>
-    ORDER BY a.create_time
-  </select>
 
 
     <select id="selectaData" parameterType="com.reptile.entity.ArticleExample" resultMap="getData">

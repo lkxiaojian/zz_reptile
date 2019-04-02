@@ -143,6 +143,21 @@ public class ReptileController {
 		return map;
 	}
 
+	@GetMapping("/delByPaper")
+	public Map delByPaper(HttpServletRequest request,HttpServletResponse response,  List<String> ids) throws Exception{
+		Map map = new HashMap();
+		try {
+			int i = reptileImpl.delByPaper(ids);
+			map.put("num", i);
+			map.put("msg", "删除数据成功！");
+			map.put("code",200);
+		} catch (Exception e) {
+			map.put("msg", "系统程序出错，请联系管理员！");
+			map.put("code",500);
+		}
+		return map;
+	}
+
 
 	@GetMapping("/getPaperData")
 	public Map getPaperData(HttpServletRequest request,HttpServletResponse response,  Paper paper
