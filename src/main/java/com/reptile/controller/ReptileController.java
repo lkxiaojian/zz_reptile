@@ -175,24 +175,9 @@ public class ReptileController {
 		try {
 			PageHelper.startPage(page, rows);
 			List<PaperWithBLOBs>  list = reptileImpl.getPaperData(paper);
-
-			List dataList = new ArrayList();
-			String code="";
-//			for (PaperWithBLOBs articleWithBLOBs : list) {
-//				code = guessEncoding(articleWithBLOBs.get);
-//				if(null!=code){
-//					String txt = new String(articleWithBLOBs.getDetailsTxt(),code);
-//					articleWithBLOBs.setTxt(txt);
-//					articleWithBLOBs.setNum(txt.length());
-//				}else{
-//					String txt = new String(articleWithBLOBs.getDetailsTxt());
-//					articleWithBLOBs.setTxt(txt);
-//					articleWithBLOBs.setNum(txt.length());
-//				}
-//			}
 			PageInfo pageInfo = new PageInfo(list);
-			map.put("count", pageInfo.getTotal());
 
+			map.put("count", pageInfo.getTotal());
 			map.put("data", list);
 			map.put("msg", "数据返回成功！");
 			map.put("code",200);
@@ -205,33 +190,18 @@ public class ReptileController {
 		return map;
 	}
 
-	public void writeWithoutHead() throws IOException {
-		try (OutputStream out = new FileOutputStream("withoutHead.xlsx");) {
-			ExcelWriter writer = new ExcelWriter(out, ExcelTypeEnum.XLSX, false);
-			Sheet sheet1 = new Sheet(1, 0);
-			sheet1.setSheetName("sheet1");
-			List<List<String>> data = new ArrayList<>();
-			for (int i = 0; i < 100; i++) {
-				List<String> item = new ArrayList<>();
-
-				data.add(item);
-			}
-			writer.write0(data, sheet1);
-			writer.finish();
-		}
-	}
 
 	@GetMapping("/getExcelArticleData")
 	public void getExcelArticleData(HttpServletRequest request,HttpServletResponse response,  ReptileEntity reptileEntity
-			,@RequestParam(value = "page", defaultValue = "1") Integer page,@RequestParam(value = "rows", defaultValue = "10") Integer rows) throws Exception{
+			,@RequestParam(value = "page", defaultValue = "1") Integer page,@RequestParam(value = "size", defaultValue = "1000") Integer size) throws Exception{
 		try {
-			PageHelper.startPage(page, rows);
+			PageHelper.startPage(page, size);
 			List<ArticleWithBLOBs> list = reptileImpl.getArticleData(reptileEntity);
 
 			//1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
 			response.setContentType("multipart/form-data");
 			//2.设置文件头：最后一个参数是设置下载文件名(假如我们叫a.pdf)
-			response.setHeader("Content-Disposition", "attachment;fileName=1.xlsx");
+			response.setHeader("Content-Disposition", "attachment;fileName=Article.xlsx");
 			OutputStream out =response.getOutputStream();
 			ExcelWriter writer = new ExcelWriter(out, ExcelTypeEnum.XLSX);
 			Sheet sheet = new Sheet(1, 0);
@@ -242,6 +212,7 @@ public class ReptileController {
 				List<String> item = new ArrayList<>();
 				item.add(articleWithBLOBs.getArticleTitle());
 				item.add(articleWithBLOBs.getCreateTime());
+				item.add(articleWithBLOBs.getUpdateTime());
 				item.add(articleWithBLOBs.getSource());
 				item.add(articleWithBLOBs.getArticleKeyword());
 				item.add(articleWithBLOBs.getAuthor());
@@ -281,15 +252,15 @@ public class ReptileController {
 
 	@GetMapping("/getExcelPaperData")
 	public void getExcelPaperData(HttpServletRequest request,HttpServletResponse response,  Paper paper
-			,@RequestParam(value = "page", defaultValue = "1") Integer page,@RequestParam(value = "rows", defaultValue = "10") Integer rows) throws Exception{
+			,@RequestParam(value = "page", defaultValue = "1") Integer page,@RequestParam(value = "size", defaultValue = "1000") Integer size) throws Exception{
 		Map map = new HashMap();
 		try {
-			PageHelper.startPage(page, rows);
+			PageHelper.startPage(page, size);
 			List<PaperWithBLOBs>  list = reptileImpl.getPaperData(paper);
 			//1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
 			response.setContentType("multipart/form-data");
 			//2.设置文件头：最后一个参数是设置下载文件名(假如我们叫a.pdf)
-			response.setHeader("Content-Disposition", "attachment;fileName=1.xlsx");
+			response.setHeader("Content-Disposition", "attachment;fileName=Paper.xlsx");
 			OutputStream out =response.getOutputStream();
 			ExcelWriter writer = new ExcelWriter(out, ExcelTypeEnum.XLSX);
 			Sheet sheet = new Sheet(1, 0);

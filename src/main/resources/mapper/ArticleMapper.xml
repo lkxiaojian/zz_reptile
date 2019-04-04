@@ -97,7 +97,7 @@
     </sql>
 
     <select id="selArticleData" parameterType="com.reptile.entity.ReptileEntity" resultMap="ResultMapWithBLOBs">
-        SELECT   a.article_id, a.article_type_id, a.article_title, a.article_keyword, a.author,
+        SELECT   a.article_id, a.article_type_id, a.article_title,b.keyword_name article_keyword, a.author,
         a.update_time,a.create_time, a.source, a.share_count, a.collect_count,
         a.collect_initcount, a.share_initcount,a.content_type, a.content_manual, a.content_readcount,
         a.content_excerpt, a.image_path, a.state, a.details_path,a.get_state ,
@@ -125,7 +125,7 @@
                 and a.article_title like #{articleTitle}
             </if>
             <if test="articleKeyword != null and articleKeyword != '' ">
-                and a.article_keyword = #{articleKeyword}
+                and b.keyword_name like #{articleKeyword}
             </if>
 
             <if test="source != null and source != '' ">
