@@ -48,7 +48,7 @@ public class PaperArticleTask
 
     private HttpUpload upFile = new HttpUpload();
 
-//    @Scheduled(cron="0/21 * * * * ?")
+    @Scheduled(cron="0/21 * * * * ?")
     public void arithmeticPapar()
     {
         try
@@ -94,18 +94,23 @@ public class PaperArticleTask
                 if (sendTypePost.isEmpty()) {
                     continue;
                 }
-                String pdf_path="";
-                if (((Map) maps.get(i)).get("pdf_path") == null) {
-                    pdf_path = "D:/File/" + ((Map) maps.get(i)).get("pdf_path").toString();
+                Object pdf_path=((Map) maps.get(i)).get("pdf_path") ;
+                if (pdf_path!= null&&!"".equals(pdf_path.toString())) {
+                    pdf_path = "D:/File/" + pdf_path.toString();
+                }else {
+                    pdf_path="123不存在";
                 }
 
 
+
                 Map map = (Map) maps.get(i);
-                File outFile = new File(pdf_path);
+                File outFile = new File(pdf_path.toString());
                 boolean exists = outFile.exists();
                 System.out.print("论文id----->" + ((Map) maps.get(i)).get("article_id") + "\n");
                 System.out.print("文件是否存在----->" + exists + "\n");
+                System.out.print("文件路径----->" + pdf_path + "\n");
                 Map param = new HashMap();
+
                 param.put("FILE_PATH", outFile.getAbsolutePath());
                 param.put("FILE_NAME", outFile.getName());
                 param.put("article_title", map.get("article_title").toString());

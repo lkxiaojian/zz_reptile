@@ -112,7 +112,7 @@ public class HttpUpload {
             File outFile = new File(filePath);
             boolean exists = outFile.exists();
             // 构建发送字符串数据
-            if (StringUtils.isNotEmpty(filePath)&&exists&&outFile.length()>100) {
+            if (StringUtils.isNotEmpty(filePath)&&exists&&outFile.isFile()&&outFile.length()>100) {
                 String fileName = params.get("FILE_NAME");
                 StringBuilder sb1 = new StringBuilder();
                 sb1.append(PREFFIX);
