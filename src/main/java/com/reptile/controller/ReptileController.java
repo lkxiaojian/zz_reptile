@@ -58,7 +58,7 @@ public class ReptileController {
 				PageHelper.startPage(page, rows);
 				List<ArticleWithBLOBs> list = reptileImpl.getData(reptileEntity);
 				List dataList = new ArrayList();
-				String code="";
+				String code;
 				Map map1 = new HashMap();
 				for (ArticleWithBLOBs articleWithBLOBs : list) {
 					map1 = new HashMap();
@@ -206,7 +206,7 @@ public class ReptileController {
 			ExcelWriter writer = new ExcelWriter(out, ExcelTypeEnum.XLSX);
 			Sheet sheet = new Sheet(1, 0);
 			List<List<String>> data = new ArrayList<>();
-			String code="";
+			String code;
 			for (ArticleWithBLOBs articleWithBLOBs : list) {
 				code = guessEncoding(articleWithBLOBs.getDetailsTxt());
 				List<String> item = new ArrayList<>();
@@ -312,8 +312,8 @@ public class ReptileController {
 		}catch (Exception e) {
 			return "";
 		}finally {
-			if(br!=null)br.close();
-			if(fileReader!=null)fileReader.close();
+			if(br!=null){br.close();}
+			if(fileReader!=null){fileReader.close();}
 		}
 		}
 }

@@ -6,6 +6,7 @@ import com.reptile.dao.Article1Mapper;
 import com.reptile.properties.RasterProperties;
 import com.reptile.utlils.HttpUpload;
 import com.reptile.utlils.HttpUtils;
+
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+
 import org.mozilla.universalchardet.UniversalDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +48,7 @@ public class PaperArticleTask
 
     private HttpUpload upFile = new HttpUpload();
 
-    @Scheduled(cron="0/21 * * * * ?")
+//    @Scheduled(cron="0/21 * * * * ?")
     public void arithmeticPapar()
     {
         try
@@ -61,31 +63,47 @@ public class PaperArticleTask
             for (int i = 0; i < maps.size(); i++) {
                 paperMaps = new ArrayList();
                 paperMap = new HashMap();
-                paperMap.put("article_id", ((Map)maps.get(i)).get("article_id"));
-                paperMap.put("title", ((Map)maps.get(i)).get("article_title"));
-                paperMap.put("content", ((Map)maps.get(i)).get("content_excerpt"));
+                Map dataMap = ((Map) maps.get(i));
+                int is_english = 0;
+                Object article_title = dataMap.get("article_title");
+                Object content = dataMap.get("content_excerpt");
+                if (article_title == null || article_title.toString().length() == 0) {
+                    article_title = dataMap.get("article_title_e");
+                    content = dataMap.get("content_excerpt_e");
+                    is_english=1;
+                }
+                if (article_title == null || article_title.toString().length() == 0) {
+                    continue;
+                }
+
+
+
+                paperMap.put("article_id", dataMap.get("article_id"));
+                paperMap.put("title", article_title);
+                paperMap.put("content", content);
                 paperMaps.add(paperMap);
 
                 String type = JSON.toJSONString(paperMaps);
                 if (type.length() > 2) {
-                    type = "{ \"articles\": [" + type.substring(1, type.length() - 1) + "    ]}";
+                    type = "{ \"articles\": [" + type.substring(1, type.length() - 1) + "    ], \"is_english\":" +
+                            is_english+
+                            "}";
                 }
 
                 String sendTypePost = HttpUtils.doPost(this.articlePath + "paper", type);
-                if (sendTypePost.isEmpty())
-                {
-                    break;
+                if (sendTypePost.isEmpty()) {
+                    continue;
                 }
-                if (((Map)maps.get(i)).get("pdf_path") == null)
-                {
-                    break;
+                String pdf_path="";
+                if (((Map) maps.get(i)).get("pdf_path") == null) {
+                    pdf_path = "D:/File/" + ((Map) maps.get(i)).get("pdf_path").toString();
                 }
-                String pdf_path = "D:/File/" + ((Map)maps.get(i)).get("pdf_path").toString();
 
-                Map map = (Map)maps.get(i);
+
+                Map map = (Map) maps.get(i);
                 File outFile = new File(pdf_path);
                 boolean exists = outFile.exists();
-                System.out.print("论文id----->" + ((Map)maps.get(i)).get("article_id") + "\n");
+                System.out.print("论文id----->" + ((Map) maps.get(i)).get("article_id") + "\n");
                 System.out.print("文件是否存在----->" + exists + "\n");
                 Map param = new HashMap();
                 param.put("FILE_PATH", outFile.getAbsolutePath());
