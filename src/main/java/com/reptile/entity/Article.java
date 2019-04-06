@@ -13,7 +13,7 @@ public class Article {
 
     private String author;
 
-    private Date updateTime;
+    private String updateTime;
 
     private String createTime;
 
@@ -75,14 +75,14 @@ public class Article {
         this.author = author == null ? null : author.trim();
     }
 
-    public Date getUpdateTime() {
+
+    public String getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
     }
-
 
     public Integer getGetState() {
         return getState;

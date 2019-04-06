@@ -68,7 +68,10 @@ public class ReptileImpl implements IReptile{
 	@Override
 	public List getArticleData(ReptileEntity record) throws Exception {
 		if(record.getArticleTitle()!=null){
-			record.setArticleTitle(record.getArticleKeyword()+"%");
+			record.setArticleTitle(record.getArticleTitle()+"%");
+		}
+		if(record.getArticleKeyword()!=null){
+			record.setArticleKeyword(record.getArticleKeyword()+"%");
 		}
 		List<ArticleWithBLOBs> list = articleMapper.selArticleData(record);
 		return list;
@@ -94,12 +97,17 @@ public class ReptileImpl implements IReptile{
 		}
 		String articleKeyword = paper.getArticleKeyword();
 		if(articleKeyword !=null && !"".equals(articleKeyword)){
-			criteria.andArticleKeywordLike(articleId+"%");
+			criteria.andArticleKeywordLike(articleKeyword+"%");
 		}
 		String articleTitle = paper.getArticleTitle();
 		if(articleTitle !=null && !"".equals(articleTitle)){
-			criteria.andArticleTitleLike(articleId+"%");
+			criteria.andArticleTitleLike(articleTitle+"%");
 		}
+		String postingName = paper.getPostingName();
+		if(postingName !=null && !"".equals(postingName)){
+			criteria.andPostingNameLike(postingName+"%");
+		}
+
 		String source = paper.getSource();
 		if(source !=null && !"".equals(source)){
 			criteria.andSourceEqualTo(source);
