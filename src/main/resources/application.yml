@@ -97,15 +97,17 @@ abstractPath: http://10.34.2.9:8080/
 
 
 #文章推送到主服务器上
-postPath: http://10.34.2.9:7903/
+postPath: http://10.34.4.182:7903/
 #postPath: http://106.2.11.94:7903/
 #postPath: http://localhost:7903/
 
 
 #查询文章分类的页数
 rasterProp:
-  #path: ..\reptile\src\main\resources\filelist.properties
+  #path: ..\reptiles\src\main\resources\filelist.properties
     path: D:\reptiles\filelist.properties
+
+
 
 
 #论文路径
