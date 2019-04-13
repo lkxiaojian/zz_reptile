@@ -192,6 +192,7 @@ public class ReptileController {
 	@GetMapping("/getExcelArticleData")
 	public void getExcelArticleData(HttpServletRequest request,HttpServletResponse response,  ReptileEntity reptileEntity
 			,@RequestParam(value = "page", defaultValue = "1") Integer page,@RequestParam(value = "size", defaultValue = "1000") Integer size) throws Exception{
+		OutputStream out=null;
 		try {
 			PageHelper.startPage(page, size);
 			List<ArticleWithBLOBs> list = reptileImpl.getArticleData(reptileEntity);
@@ -200,7 +201,7 @@ public class ReptileController {
 			response.setContentType("multipart/form-data");
 			//2.设置文件头：最后一个参数是设置下载文件名(假如我们叫a.pdf)
 			response.setHeader("Content-Disposition", "attachment;fileName=Article.xlsx");
-			OutputStream out =response.getOutputStream();
+			out =response.getOutputStream();
 			ExcelWriter writer = new ExcelWriter(out, ExcelTypeEnum.XLSX);
 			Sheet sheet = new Sheet(1, 0);
 			List<List<String>> data = new ArrayList<>();
@@ -264,6 +265,8 @@ public class ReptileController {
 			writer.finish();
 
 		} catch (Exception e) {
+		}finally {
+			if(out!=null)out.close();
 		}
 
 	}
@@ -272,6 +275,7 @@ public class ReptileController {
 	public void getExcelPaperData(HttpServletRequest request,HttpServletResponse response,  Paper paper
 			,@RequestParam(value = "page", defaultValue = "1") Integer page,@RequestParam(value = "size", defaultValue = "1000") Integer size) throws Exception{
 		Map map = new HashMap();
+		OutputStream out=null;
 		try {
 			PageHelper.startPage(page, size);
 			List<PaperWithBLOBs>  list = reptileImpl.getPaperData(paper);
@@ -279,7 +283,7 @@ public class ReptileController {
 			response.setContentType("multipart/form-data");
 			//2.设置文件头：最后一个参数是设置下载文件名(假如我们叫a.pdf)
 			response.setHeader("Content-Disposition", "attachment;fileName=Paper.xlsx");
-			OutputStream out =response.getOutputStream();
+			out =response.getOutputStream();
 			ExcelWriter writer = new ExcelWriter(out, ExcelTypeEnum.XLSX);
 			Sheet sheet = new Sheet(1, 0);
 			List<List<String>> data = new ArrayList<>();
@@ -354,6 +358,8 @@ public class ReptileController {
 			writer.write0(data,sheet,table);
 			writer.finish();
 		} catch (Exception e) {
+		}finally {
+			if(out!=null)out.close();
 		}
 
 	}
