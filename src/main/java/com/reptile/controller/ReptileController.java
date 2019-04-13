@@ -213,7 +213,7 @@ public class ReptileController {
 				item.add(articleWithBLOBs.getUpdateTime());
 				item.add(articleWithBLOBs.getSource());
 				item.add(articleWithBLOBs.getArticleKeyword());
-				item.add(articleWithBLOBs.getAuthor());
+//				item.add(articleWithBLOBs.getAuthor());
 				item.add(articleWithBLOBs.getContentExcerpt());
 				if(null!=code){
 					String txt = new String(articleWithBLOBs.getDetailsTxt(),code);
@@ -231,16 +231,36 @@ public class ReptileController {
 			List<String> headCoulumn1 = new ArrayList<String>();
 			List<String> headCoulumn2 = new ArrayList<String>();
 			List<String> headCoulumn3 = new ArrayList<String>();
-			headCoulumn1.add("第一列");
-			headCoulumn2.add("第二列");
-			headCoulumn3.add("第三列");
+			List<String> headCoulumn33 = new ArrayList<String>();
+			List<String> headCoulumn4 = new ArrayList<String>();
+//			List<String> headCoulumn5 = new ArrayList<String>();
+			List<String> headCoulumn6 = new ArrayList<String>();
+			List<String> headCoulumn7 = new ArrayList<String>();
+			List<String> headCoulumn8 = new ArrayList<String>();
+
+			headCoulumn1.add("文章标题");
+			headCoulumn2.add("创建时间");
+			headCoulumn3.add("入库时间");
+			headCoulumn33.add("来源");
+			headCoulumn4.add("关键词");
+//			headCoulumn5.add("作者");
+			headCoulumn6.add("文章摘要");
+			headCoulumn7.add("文章内容");
+			headCoulumn8.add("字数");
 			head.add(headCoulumn1);
 			head.add(headCoulumn2);
 			head.add(headCoulumn3);
+			head.add(headCoulumn33);
+			head.add(headCoulumn4);
+//			head.add(headCoulumn5);
+			head.add(headCoulumn6);
+			head.add(headCoulumn7);
+			head.add(headCoulumn8);
+
 			Table table = new Table(1);
 			table.setHead(head);
 
-			writer.write0(data,sheet);
+			writer.write0(data,sheet,table);
 			writer.finish();
 
 		} catch (Exception e) {
@@ -267,23 +287,71 @@ public class ReptileController {
 			for (PaperWithBLOBs paperWithBLOBs : list) {
 				List<String> item = new ArrayList<>();
 				item.add(paperWithBLOBs.getArticleTitle());
-				item.add(paperWithBLOBs.getSource());
-				item.add(paperWithBLOBs.getAuthor());
-				item.add(paperWithBLOBs.getAuthorE());
+				item.add(paperWithBLOBs.getCreateTime());
+				item.add(paperWithBLOBs.getUpdateTime());
 				item.add(paperWithBLOBs.getArticleKeyword());
 				item.add(paperWithBLOBs.getArticleKeywordE());
-				item.add(paperWithBLOBs.getPdfPath());
-				item.add(paperWithBLOBs.getCreateTime());
+				item.add(paperWithBLOBs.getAuthor());
+				item.add(paperWithBLOBs.getAuthorE());
 				item.add(paperWithBLOBs.getContentExcerpt());
 				item.add(paperWithBLOBs.getContentExcerptE());
-				item.add(paperWithBLOBs.getReference());
+				item.add(paperWithBLOBs.getPdfPath());
 				item.add(paperWithBLOBs.getPublicationDate());
+				item.add(paperWithBLOBs.getReference());
 				item.add(paperWithBLOBs.getPostingName());
-				item.add(paperWithBLOBs.getUpdateTime());
+//				item.add(paperWithBLOBs.getSource());
 
 				data.add(item);
 			}
-			writer.write0(data,sheet);
+
+			List<List<String>> head = new ArrayList<List<String>>();
+			List<String> headCoulumn1 = new ArrayList<String>();
+			List<String> headCoulumn2 = new ArrayList<String>();
+			List<String> headCoulumn3 = new ArrayList<String>();
+			List<String> headCoulumn4 = new ArrayList<String>();
+			List<String> headCoulumn44 = new ArrayList<String>();
+			List<String> headCoulumn5 = new ArrayList<String>();
+			List<String> headCoulumn55 = new ArrayList<String>();
+			List<String> headCoulumn6 = new ArrayList<String>();
+			List<String> headCoulumn66 = new ArrayList<String>();
+			List<String> headCoulumn7 = new ArrayList<String>();
+			List<String> headCoulumn8 = new ArrayList<String>();
+			List<String> headCoulumn9 = new ArrayList<String>();
+			List<String> headCoulumn10 = new ArrayList<String>();
+//			List<String> headCoulumn11 = new ArrayList<String>();
+
+			headCoulumn1.add("论文标题");
+			headCoulumn2.add("创建时间");
+			headCoulumn3.add("入库时间");
+			headCoulumn4.add("关键词");
+			headCoulumn44.add("英文关键词");
+			headCoulumn5.add("作者");
+			headCoulumn55.add("英文作者");
+			headCoulumn6.add("摘要");
+			headCoulumn66.add("英文摘要");
+			headCoulumn7.add("路径");
+			headCoulumn8.add("刊出卷期");
+			headCoulumn9.add("参考文献");
+			headCoulumn10.add("刊期名称");
+//			headCoulumn11.add("来源");
+			head.add(headCoulumn1);
+			head.add(headCoulumn2);
+			head.add(headCoulumn3);
+			head.add(headCoulumn4);
+			head.add(headCoulumn44);
+			head.add(headCoulumn5);
+			head.add(headCoulumn55);
+			head.add(headCoulumn6);
+			head.add(headCoulumn66);
+			head.add(headCoulumn7);
+			head.add(headCoulumn8);
+			head.add(headCoulumn9);
+			head.add(headCoulumn10);
+//			head.add(headCoulumn11);
+
+			Table table = new Table(1);
+			table.setHead(head);
+			writer.write0(data,sheet,table);
 			writer.finish();
 		} catch (Exception e) {
 		}
