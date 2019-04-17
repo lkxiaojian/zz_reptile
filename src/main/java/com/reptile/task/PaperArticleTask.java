@@ -48,7 +48,7 @@ public class PaperArticleTask
 
     private HttpUpload upFile = new HttpUpload();
 
-//    @Scheduled(cron="0/21 * * * * ?")
+    @Scheduled(cron="0/21 * * * * ?")
     public void arithmeticPapar()
     {
         try

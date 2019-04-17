@@ -63,7 +63,6 @@ pagehelper:
 
 
 
-
 WEB_URL: http://weixin.sogou.com/weixin
 #WEB_CONDITION: usip=&ft=&tsn=2&et=&interation=&type=2&wxid=&ie=utf8
 WEB_CONDITION: type=2&ie=utf8&tsn=5&ft=startTime&et=endTime&interation=&wxid=&usip=

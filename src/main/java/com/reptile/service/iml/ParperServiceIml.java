@@ -147,6 +147,8 @@ public class ParperServiceIml implements ParperService {
             Object details_div = maps.get(i).get("details_txt");
             Object article_title = maps.get(i).get("article_title");
 
+            Object details_txt = maps.get(i).get("details_div");
+
             byte[] details_divbytes = (byte[]) details_div;
             if (details_div != null && article_title != null) {
                 try {
@@ -161,6 +163,25 @@ public class ParperServiceIml implements ParperService {
                     }
 
                     maps.get(i).put("details_txt", s);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            byte[] details_txtes = (byte[]) details_txt;
+            if (details_txtes != null && article_title != null) {
+                try {
+
+                    String code = guessEncoding(details_txtes);
+
+                    String s = "";
+                    if (null != code) {
+                        s = new String(details_txtes, code);
+                    } else {
+                        s = new String(details_txtes);
+                    }
+
+                    maps.get(i).put("details_div", s);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
