@@ -70,4 +70,9 @@
     from chat.academic_paper WHERE 1=1
      ORDER BY update_time ASC LIMIT #{page},#{rows}
   </select>
+
+
+
+
+
 </mapper>

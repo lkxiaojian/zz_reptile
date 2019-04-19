@@ -5,6 +5,7 @@ import com.reptile.dao.Article1Mapper;
 import com.reptile.entity.AbstractTmp;
 import com.reptile.entity.ArticleTmp;
 import com.reptile.properties.RasterProperties;
+import com.reptile.utlils.DateUtils;
 import com.reptile.utlils.HttpUtils;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -46,11 +47,14 @@ public class ArithmeticArticleTask {
     @Scheduled(cron = "0/20 * * * * ?")
     public void ArithmeticArticle() {
         int page = Integer.parseInt(this.rasterProperties.getPropValue("1"));
+        String s1 = DateUtils.dataAddOneDay(page);
         Map paremMap = new HashMap();
         paremMap.put("rows", Integer.valueOf(this.rows));
         paremMap.put("page", Integer.valueOf(page * this.rows));
-        List mapsId = this.article1Mapper.ArithmeticArticle(paremMap);
-
+        paremMap.put("startTime", s1+" 00:00:00");
+        paremMap.put("endTime", s1+" 23:59:59");
+//        List mapsId = this.article1Mapper.ArithmeticArticle(paremMap);
+        List mapsId = this.article1Mapper.ArithmeticArticleByTime(paremMap);
         String sql = " and article_id in(";
         String idList = "";
 
@@ -94,12 +98,13 @@ public class ArithmeticArticleTask {
                     }
                     String sendTypePost = HttpUtils.doPost(this.articlePath + "wechat", type);
                     if (sendTypePost.isEmpty()) {
-                        break;
+                        System.out.print("文章上传-####-->5\n");
+                        continue;
                     }
                     ArticleTmp article_tmp = (ArticleTmp) JSON.parseObject(sendTypePost, ArticleTmp.class);
                     String abstracts = JSON.toJSONString(abstractMaps);
                     if (abstracts.isEmpty()) {
-                        break;
+                        continue;
                     }
                     String sendAbstractsPost = HttpUtils.doPost(this.abstractPath + "abstract/", abstracts);
                     if (sendAbstractsPost != null) {

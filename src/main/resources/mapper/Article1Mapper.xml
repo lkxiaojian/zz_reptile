@@ -90,4 +90,11 @@
         ${sql}
     </select>
 
+
+    <select id="ArithmeticArticleByTime" parameterType="java.util.Map" resultType="java.util.Map">
+        select  article_id from chat.article1 where state=1 AND  update_time &gt; #{startTime} AND  update_time &lt;= #{endTime}
+
+
+    </select>
+
 </mapper>
