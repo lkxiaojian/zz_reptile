@@ -54,7 +54,7 @@
 
 
     <select id="getData" parameterType="java.util.Map" resultType="java.util.Map">
-    select article_id, pdf_path,article_title,article_title_e,update_time,content_excerpt_e,content_excerpt
+    select article_id, pdf_path,article_title,article_title_e,update_time,content_excerpt_e,content_excerpt,article_keyword,article_keyword_e
     from academic_paper  ORDER BY update_time ASC LIMIT #{page},#{rows}
   </select>
 
