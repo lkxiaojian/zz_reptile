@@ -96,7 +96,7 @@ public class ArithmeticArticleTask {
                     if (type.length() > 2) {
                         type = "{ \"articles\": [" + type.substring(1, type.length() - 1) + "    ]}";
                     }
-                    System.out.print("文章上传-####-->"+i/maps.size()+"\n");
+                    System.out.print("文章上传数量-####-->"+i+"---"+maps.size()+"\n");
                     String sendTypePost = HttpUtils.doPost(this.articlePath + "wechat", type);
                     if (sendTypePost.isEmpty()) {
                         System.out.print("文章上传-####-->5\n");

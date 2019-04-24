@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.reptile.dao.AcademicPaperMapper;
 import com.reptile.dao.Article1Mapper;
 import com.reptile.properties.RasterProperties;
+import com.reptile.utlils.DateUtils;
 import com.reptile.utlils.HttpUpload;
 import com.reptile.utlils.HttpUtils;
 
@@ -49,17 +50,23 @@ public class PaperArticleTask
     private HttpUpload upFile = new HttpUpload();
 
 //    @Scheduled(cron="0/21 * * * * ?")
+@Scheduled(cron="0 15 1 ? * *")
     public void arithmeticPapar()
     {
         try
         {
-            int page = Integer.parseInt(this.rasterProperties.getPropValue("2"));
+            int page =0;
+//            int page = Integer.parseInt(this.rasterProperties.getPropValue("2"));
             Map parmMap = new HashMap();
+            String s1 = DateUtils.dataSubtractOneDay(1);
             parmMap.put("rows", Integer.valueOf(this.rows));
-            parmMap.put("page", Integer.valueOf(page * this.rows));
+//            parmMap.put("page", Integer.valueOf(page * this.rows));
+            parmMap.put("startTime", s1+" 00:00:00");
+            parmMap.put("endTime", s1+" 23:59:59");
             List paperMaps = new ArrayList();
             Map paperMap = null;
-            List maps = this.academicPaperMapper.ArithmeticPaperTmp(parmMap);
+//            List maps = this.academicPaperMapper.ArithmeticPaperTmp(parmMap);
+            List maps = this.academicPaperMapper.ArithmeticPaperTmpByTime(parmMap);
             for (int i = 0; i < maps.size(); i++) {
                 paperMaps = new ArrayList();
                 paperMap = new HashMap();

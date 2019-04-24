@@ -41,4 +41,19 @@ public class DateUtils {
         Date strtodate = formatter.parse(strDate, pos);
         return strtodate;
     }
+
+    public static String dataSubtractOneDay(int i) {
+
+        Date dNow = new Date();
+        //得到日历
+        Calendar calendar = Calendar.getInstance();
+        //把当前时间赋给日历
+        calendar.setTime(dNow);
+        calendar.add(Calendar.DAY_OF_MONTH, -i);
+        //设置时间格式
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        //格式化前一天
+        String defaultStartDate = sdf.format( calendar.getTime());
+        return defaultStartDate;
+    }
 }
