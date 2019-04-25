@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 
+import org.apache.poi.hssf.record.PageBreakRecord;
 import org.mozilla.universalchardet.UniversalDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +64,9 @@ public class ArithmeticArticleTask {
         }
         if (idList.length() > 0) {
             idList = idList.substring(0, idList.length() - 1);
+        }else {
+            this.rasterProperties.setProp("1", page + 1 + "");
+           return;
         }
         sql = sql + idList + ")";
         paremMap.put("sql", sql);
