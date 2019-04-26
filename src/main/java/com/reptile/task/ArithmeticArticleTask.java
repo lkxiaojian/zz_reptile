@@ -334,7 +334,6 @@ public class ArithmeticArticleTask {
 //
 
             String pdf_path = "D:/File/" + maps.get(i).get("pdf_path").toString();
-//            pdf_path = "E:/Users/study/java框架/Android面试题汇总整理/2018Android面试 常见58题.docx";
 
             Map<String, Object> map = maps.get(i);
             File outFile = new File(pdf_path);
