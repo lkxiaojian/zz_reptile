@@ -51,6 +51,7 @@ public class PaperArticleTask
 
 //    @Scheduled(cron="0/21 * * * * ?")
 @Scheduled(cron="0 15 1 ? * *")
+//@Scheduled(initialDelay=100,fixedDelay=1000*60*5)
     public void arithmeticPapar()
     {
         try
@@ -138,6 +139,7 @@ public class PaperArticleTask
                 param.put("seach_keyword", map.get("seach_keyword") == null ? "" : map.get("seach_keyword").toString());
                 param.put("publication_date", map.get("publication_date") == null ? "" : map.get("publication_date").toString());
                 param.put("pdf_path", map.get("pdf_path") == null ? "" : map.get("pdf_path").toString());
+                param.put("image_path", map.get("image_path") == null ? "" : map.get("image_path").toString());
 
                 param.put("json", sendTypePost);
                 String uplaod = this.upFile.uplaod(this.postPath + "weatherData/fileUpload", param);
