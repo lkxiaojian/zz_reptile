@@ -45,10 +45,12 @@ public class ArithmeticArticleTask {
     private String postPath;
     private int rows = 50;
 
-    @Scheduled(cron = "0/20 * * * * ?")
+//    @Scheduled(cron = "0/20 * * * * ?")
+    @Scheduled(cron="0 16 1 ? * *")
     public void ArithmeticArticle() {
         int page = Integer.parseInt(this.rasterProperties.getPropValue("1"));
-        String s1 = DateUtils.dataAddOneDay(page);
+//        String s1 = DateUtils.dataAddOneDay(page);
+        String s1 = DateUtils.dataSubtractOneDay(1);
         Map paremMap = new HashMap();
         paremMap.put("rows", Integer.valueOf(this.rows));
         paremMap.put("page", Integer.valueOf(page * this.rows));
@@ -103,12 +105,13 @@ public class ArithmeticArticleTask {
                     System.out.print("文章上传数量-####-->"+i+"---"+maps.size()+"\n");
                     String sendTypePost = HttpUtils.doPost(this.articlePath + "wechat", type);
                     if (sendTypePost.isEmpty()) {
-                        System.out.print("文章上传-####-->5\n");
+                        System.out.print("文章上传-####-->分类为空\n");
                         continue;
                     }
                     ArticleTmp article_tmp = (ArticleTmp) JSON.parseObject(sendTypePost, ArticleTmp.class);
                     String abstracts = JSON.toJSONString(abstractMaps);
                     if (abstracts.isEmpty()) {
+                        System.out.print("文章上传-####-->分类为空\n");
                         continue;
                     }
                     String sendAbstractsPost = HttpUtils.doPost(this.abstractPath + "abstract/", abstracts);
@@ -119,7 +122,7 @@ public class ArithmeticArticleTask {
                             abstractTmp = JSON.parseArray(sendAbstractsPost, AbstractTmp.class);
                         } catch (Exception e) {
 
-                            System.out.print("文章上传-####-->\n");
+                            System.out.print("文章上传-####-->摘要为空\n");
                             continue;
                         }
 
