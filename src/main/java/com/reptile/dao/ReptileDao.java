@@ -11,11 +11,12 @@ import com.reptile.entity.ReptileEntity;
 public interface ReptileDao {
 
     int insert(ReptileEntity record);
-    
+
     int inserts(List<ReptileEntity> list);
 
     int insertsIpPost(IpPostEntity ipPostEntity);
-    
+
     List<IpPostEntity>  selectIpPost(IpPostEntity ipPostEntity);
 
+    void deleteIpPost();
 }

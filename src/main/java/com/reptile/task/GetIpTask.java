@@ -2,6 +2,7 @@ package com.reptile.task;
 
 import com.reptile.dao.ReptileDao;
 import com.reptile.entity.IpPostEntity;
+import com.sun.jdi.IntegerValue;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -33,7 +34,7 @@ public class GetIpTask {
     @Autowired
     private ReptileDao mapper;
 
-    @Scheduled(cron = "0 0 0 1/1 * ? ")
+    @Scheduled(cron = "0 0 0 1/2 * ? ")
     public void getIp()  {
 
         try {
@@ -59,6 +60,58 @@ public class GetIpTask {
 
                         ipPostEntity = new IpPostEntity();
                         try {
+                            ipPostEntity.setIp(ip);
+                            ipPostEntity.setPost(post);
+                            ipPostEntity.setState(1);
+                            connect(ip,post);
+                            mapper.insertsIpPost(ipPostEntity);
+                        } catch (Exception e) {
+                            ipPostEntity.setState(0);
+                            mapper.insertsIpPost(ipPostEntity);
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    @Scheduled(cron = "0 0 0 2/2 * ? ")
+//    @Scheduled(initialDelay=100,fixedDelay=1000*60*5)
+    public void getIp2()  {
+
+        try {
+            mapper.deleteIpPost();
+
+            IpPostEntity ipPostEntity = null;
+            String url = "http://www.xiladaili.com/gaoni/page/";
+
+            for (int j = 10; j < 30; j++) {
+                Connection con= Jsoup.connect(url.replace("page",j+""));//鑾峰彇杩炴帴
+
+                con.ignoreContentType(true).ignoreHttpErrors(true);
+                con.timeout(1000 * 20);
+                Document document  = con.get();
+                Elements trs = document.select("tr");
+                org.jsoup.nodes.Element tr = null;
+                Elements tds = null;
+                String ip = "";
+                String[] ipPost ;
+                int post = 0;
+                if(trs!=null) {
+                    for (int i = 1,num= trs.size(); i <num; i++) {
+                        try {
+                            tr = trs.get(i);
+                            tds = tr.select("td");
+                            ipPost = tds.get(0).text().split(":");
+                            System.out.println(ip+":"+post);
+                            ip = ipPost[0];
+                            post  =Integer.valueOf(ipPost[1]);
+                            ipPostEntity = new IpPostEntity();
+
                             ipPostEntity.setIp(ip);
                             ipPostEntity.setPost(post);
                             ipPostEntity.setState(1);

@@ -89,4 +89,8 @@
 
 	  </select>
 
+	<delete id="deleteIpPost" >
+    delete from ip_post where STATE = 0
+  	</delete>
+
 </mapper>
