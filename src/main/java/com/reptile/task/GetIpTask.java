@@ -33,13 +33,12 @@ public class GetIpTask {
     @Autowired
     private ReptileDao mapper;
 
-
-    @Scheduled(cron = "0 0 0 1/7 * ?")
+    @Scheduled(cron = "0 0 0 1/1 * ? ")
     public void getIp()  {
 
         try {
             IpPostEntity ipPostEntity = null;
-            for (int j = 1; j < 26; j++) {
+            for (int j = 1; j < 10; j++) {
                 Connection con= Jsoup.connect("https://www.xicidaili.com/nn/"+j);//鑾峰彇杩炴帴
 
                 con.ignoreContentType(true).ignoreHttpErrors(true);
