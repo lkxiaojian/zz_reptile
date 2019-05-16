@@ -103,7 +103,7 @@ public class PaperArticleTask
                     continue;
                 }
                 Object pdf_path=((Map) maps.get(i)).get("pdf_path") ;
-                if (pdf_path!= null&&!"".equals(pdf_path.toString())) {
+                if (pdf_path!= null&&!"".equals(pdf_path.toString())&&pdf_path.toString().endsWith(".pdf")) {
                     pdf_path = "D:/File/" + pdf_path.toString();
                 }else {
                     pdf_path="123不存在";
