@@ -97,4 +97,13 @@
 
     </select>
 
+
+    <select id="getWxDataMessageById" parameterType="java.lang.String" resultType="java.util.Map">
+        select  article_id,details_txt from chat.article1 where article_id =#{id}
+
+
+    </select>
+
+
+
 </mapper>

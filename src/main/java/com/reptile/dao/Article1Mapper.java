@@ -20,4 +20,6 @@ public interface Article1Mapper {
     List<Map<String, Object>> ArithmeticArticle1(Map<String, Object> paramMap);
 
     List ArithmeticArticleByTime(Map paremMap);
+
+    Map<String, Object>  getWxDataMessageById(String id);
 }

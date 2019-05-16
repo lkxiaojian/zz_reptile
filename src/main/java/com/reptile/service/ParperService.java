@@ -8,4 +8,6 @@ public interface ParperService {
     Map getWxData(int rows, int page, String type) throws Exception;
 
     Map getWxDataById(int rows, int page, String typeId) throws  Exception;
+
+    Map getWxDataMessageById(String id) throws  Exception;
 }

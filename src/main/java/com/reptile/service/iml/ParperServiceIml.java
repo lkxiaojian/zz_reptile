@@ -197,6 +197,33 @@ public class ParperServiceIml implements ParperService {
         return map;
     }
 
+    @Override
+    public Map getWxDataMessageById(String id) throws Exception {
+        Map<String, Object> wxDataMessageById = article1Mapper.getWxDataMessageById(id);
+        Object details_txt = wxDataMessageById.get("details_txt");
+        Map maps=new HashMap();
+        byte[] details_txtes = (byte[]) details_txt;
+        if (details_txtes != null) {
+            try {
+
+                String code = guessEncoding(details_txtes);
+
+                String s = "";
+                if (null != code) {
+                    s = new String(details_txtes, code);
+                } else {
+                    s = new String(details_txtes);
+                }
+
+                maps.put("details_div", s);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return maps;
+    }
+
 
     public String guessEncoding(byte[] bytes) {
         UniversalDetector detector = new UniversalDetector(null);
@@ -206,6 +233,7 @@ public class ParperServiceIml implements ParperService {
         detector.reset();
         return encoding;
     }
+
 
 
 }
